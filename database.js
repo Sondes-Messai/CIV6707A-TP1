@@ -13,10 +13,9 @@ export function writeAgencyToDatabase(agency) {
   }
 
   // Write the serialized Agency object to a JSON file.
-  fs.writeFile(path, json, (err) => {
-    if (err) {
-      throw err;
-    }
-    console.log("JSON data is saved.");
-  });
+  try {
+    fs.writeFileSync(path, json);
+  } catch(err) {
+    console.error(err);
+  }
 }
