@@ -1,5 +1,7 @@
+import fs from 'fs';
+
 import { Bus, Agency } from '../model.js';
-import { loadAgencyFromDatabase, writeAgencyToDatabase } from '../database.js';
+import { loadAgencyFromDatabase, writeAgencyToDatabase, databasePath } from '../database.js';
 
 test('verifies database writing and reading integrity', () => {
   const fakeAgencyShortName = "__fake__agency__"
@@ -27,4 +29,7 @@ test('verifies database writing and reading integrity', () => {
 
   // We expect testAgency and testAgencyRead to contain the same data.
   expect(testAgency).toMatchObject(testAgencyRead);
+
+  // Delete the fake agency once we are done.
+  fs.unlinkSync(databasePath + fakeAgencyShortName + ".json");
 });
