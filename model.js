@@ -12,9 +12,9 @@ class Bus {
 }
 
 class Agency {
-  constructor(name, shortname, busInventory) {
+  constructor(name, shortName, busInventory) {
     this.name = name;
-    this.shortname = shortname;
-    this.busInventory = busInventory;
+    this.shortName = shortName;
+    this.busInventory = busInventory || []; // Default to an empty list if busInvestory is not specified.
   }
 }
