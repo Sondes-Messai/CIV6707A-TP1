@@ -19,3 +19,23 @@ export function writeAgencyToDatabase(agency) {
     console.error(err);
   }
 }
+
+export function loadAgencyFromDatabase(agencyShortName) {
+  const path = databasePath + agencyShortName + '.json';
+
+  const json = fs.readFileSync(path);
+  const agencyData = JSON.parse(json);
+
+  const agency = new Agency(agencyData);
+
+  // Now we must convert all plain JavaScript objects to 
+  // objects of the class Bus. Is this the best way to do this?
+  const convertedBusObjects = [];
+  agency.busInventory.forEach((busObj, i) => {
+    const bus = new Bus(busObj);
+    convertedBusObjects.push(bus);
+  });
+  agency.busInventory = convertedBusObjects;
+
+  return agency;
+}
