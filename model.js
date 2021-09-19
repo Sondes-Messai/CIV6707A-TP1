@@ -1,20 +1,22 @@
 class Bus {
-  constructor(id, license, make, model, seatCount, standingCapacity, doorCount, accessCount) {
-    this.id = id;
-    this.license = license;
-    this.make = make;
-    this.model = model;
-    this.seatCount = seatCount;
-    this.standingCapacity = standingCapacity;
-    this.doorCount = doorCount;
-    this.accessCount = accessCount;
+  constructor(obj) {
+    this.id = obj.id;
+    this.license = obj.license;
+    this.make = obj.make;
+    this.model = obj.model;
+    this.seatCount = obj.seatCount;
+    this.standingCapacity = obj.standingCapacity;
+    this.doorCount = obj.doorCount;
+    this.accessCount = obj.accessCount;
   }
 }
 
 class Agency {
-  constructor(name, shortName, busInventory) {
-    this.name = name;
-    this.shortName = shortName;
-    this.busInventory = busInventory || []; // Default to an empty list if busInvestory is not specified.
+  constructor(obj) {
+    this.name = obj.name;
+    this.shortName = obj.shortName;
+    this.busInventory = obj.busInventory || []; // Default to an empty list if busInvestory is not specified.
   }
 }
+
+export {Bus, Agency};
