@@ -24,7 +24,7 @@ const agencyDB = [];
 const addAgency = function(name, shortName, busInventory) {
     const agency = {
         name : name,
-        shortName : shortName;
+        shortName : shortName,
         busInventory : busInventory
     };
     agencyDB.push(agency);
