@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { Bus, Agency } from './model.js';
 
-const databasePath = 'data/';
+export const databasePath = 'data/';
 
 export function writeAgencyToDatabase(agency) {
   const json = JSON.stringify(agency, null, 2); // 2 spaces for each indentation level.
