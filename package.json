@@ -5,7 +5,7 @@
   "main": "main.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/davidmurray/CIV6707A-TP1/issues"
   },
-  "homepage": "https://github.com/davidmurray/CIV6707A-TP1#readme"
+  "homepage": "https://github.com/davidmurray/CIV6707A-TP1#readme",
+  "devDependencies": {
+    "jest": "^27.2.0"
+  }
 }
