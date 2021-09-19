@@ -1,4 +1,4 @@
-//création d'une fonction qui permet l'ajout d'une bus dans la base de donnée busDB
+//création d'une fonction qui permet l'ajout d'un bus dans la base de donnée busDB
 
 
 
