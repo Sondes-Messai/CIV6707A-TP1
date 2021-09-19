@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Small command-line utility to manage a public transit agency's bus fleet.",
   "main": "main.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
