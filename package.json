@@ -1,0 +1,19 @@
+{
+  "name": "bus-fleet-manager",
+  "version": "1.0.0",
+  "description": "Small command-line utility to manage a public transit agency's bus fleet.",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davidmurray/CIV6707A-TP1.git"
+  },
+  "author": "David Murray, Ann-Ya Foo Kune, Moussa Azizi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/davidmurray/CIV6707A-TP1/issues"
+  },
+  "homepage": "https://github.com/davidmurray/CIV6707A-TP1#readme"
+}
