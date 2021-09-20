@@ -17,3 +17,16 @@ const addBus = function(id, license, make, model, seatCount, standingCount, door
     busDB.push(bus);
     return bus;
 };
+
+// création d'une fonction qui permet l'ajout d'une agence dans la base de donnée agencyDB
+
+const agencyDB = [];
+const addAgency = function(name, shortName, busInventory) {
+    const agency = {
+        name : name,
+        shortName : shortName,
+        busInventory : busInventory
+    };
+    agencyDB.push(agency);
+    return agency;
+};
