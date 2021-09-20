@@ -104,3 +104,7 @@ dist
 .tern-port
 
 data/*
+
+# macOS files
+.DS_Store
+**/.DS_Store
