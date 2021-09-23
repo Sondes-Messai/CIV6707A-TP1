@@ -4,13 +4,14 @@ import { Bus, Agency } from './model.js';
 
 export const databasePath = 'data/';
 
-// Create a list of all agencies named by their 'short name' (ex: 'stm').
+// Create a list of all currently stored agencies.
 export const currentAgencies = [];
 const filesList = fs.readdirSync(databasePath);
 for (const filename of filesList) {
   if (path.extname(filename) !== '.json')
     continue;
-  currentAgencies.push(filename.split('.')[0]);
+  const agency = loadAgencyFromDatabase(filename.split('.')[0]);
+  currentAgencies.push(agency);
 }
 
 export function writeAgencyToDatabase(agency) {
