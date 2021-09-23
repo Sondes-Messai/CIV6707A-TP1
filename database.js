@@ -1,7 +1,17 @@
 import fs from 'fs';
+import path from 'path';
 import { Bus, Agency } from './model.js';
 
 export const databasePath = 'data/';
+
+// Create a list of all agencies named by their 'short name' (ex: 'stm').
+export const currentAgencies = [];
+const filesList = fs.readdirSync(databasePath);
+for (const filename of filesList) {
+  if (path.extname(filename) !== '.json')
+    continue;
+  currentAgencies.push(filename.split('.')[0]);
+}
 
 export function writeAgencyToDatabase(agency) {
   const json = JSON.stringify(agency, null, 2); // 2 spaces for each indentation level.
