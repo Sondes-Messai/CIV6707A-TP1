@@ -1,26 +1,26 @@
 //Interface utilisateur pour ajouter un autobus, supprimer un autobus, faire une recherche
 
-import pkg from 'inquirer';
-const { inquirer } = pkg;
+import inquirer from 'inquirer';
 
-import { currentAgencies } from './database.js';
+import { currentAgencies, loadAgencyFromDatabase, writeAgencyToDatabase } from './database.js';
+import { Agency, Bus } from './model.js';
 
 const agencyChoices = [];
 for (const agency of currentAgencies) {
-    agencyChoices.push(`${agency.name} (${agency.shortName})`);
+    agencyChoices.push(agency.shortName);
 }
 
 const agency_select_questions = {
-    name: 'agencies',
+    name: 'agencyShortName',
     type: 'list',
     message: 'Veuillez choisir une agence (utilisez les flèches et la touche « retour » pour sélectionner):',
-    choices: a
+    choices: agencyChoices
 };
 
 const top_menu_questions = 
 [
     {
-        name: 'actionChoice',
+        name: 'choice',
         type: 'list',
         message: 'Que voulez-vous faire? (utilisez les flèches et la touche « retour » pour sélectionner):',
         choices: ['Choisir une agence existante', 'Créer une nouvelle agence', 'Effacer une agence existante'],
@@ -33,6 +33,19 @@ const agency_questions = [
         type: 'list',
         message: 'Que voulez-vous faire? (utilisez les flèches et la touche « retour » pour sélectionner):',
         choices: ['Ajouter un autobus', 'Supprimer un autobus', 'Faire une recherche'],
+    }
+];
+
+const add_an_agency_questions = [
+    {
+        name: 'name',
+        type: 'input',
+        message: 'Quel est le nom complet de l\'agence?'
+    },
+    {
+        name: 'shortName',
+        type: 'input',
+        message: 'Quel est le nom court de l\'agence? (ex: stm)'
     }
 ];
 
@@ -79,6 +92,26 @@ const add_a_bus_questions = [
     },
 ];
 
+var currentAgency = null;
+
+inquirer.prompt(top_menu_questions).then(({ choice }) => {
+    if (choice === 'Choisir une agence existante') {
+        inquirer.prompt(agency_select_questions).then(({ agencyShortName }) => {
+            currentAgency = loadAgencyFromDatabase(agencyShortName);
+        });
+    } else if (choice === 'Créer une nouvelle agence') {
+        inquirer.prompt(add_an_agency_questions).then((answers) => {
+            // The variable 'answers' will contain a value for answers.name and answers.shortName, which is
+            // exactly what the constructor of Agency wants.
+            currentAgency = new Agency(answers);
+            writeAgencyToDatabase(currentAgency);
+        });
+    } else if (choice == 'Effacer une agence existante') {
+        // TODO
+    }
+});
+
+/*
 inquirer.prompt(top_menu_questions) //doit changer les fonction flèches pour des fonctions.
     .then(({ actionChoice }) => {
         switch (actionChoice) {
@@ -92,7 +125,7 @@ inquirer.prompt(top_menu_questions) //doit changer les fonction flèches pour de
         }
     })
 
-
+*/
 //création d'une fonction qui permet l'ajout d'un bus dans la base de donnée busDB
 const busDB = [];
 const addBus = function (id, license, make, model, seatCount, standingCount, doorCount, accessCount) {
