@@ -29,7 +29,7 @@ const top_menu_questions =
 
 const agency_questions = [
     {
-        name: 'actionChoice',
+        name: 'choice',
         type: 'list',
         message: 'Que voulez-vous faire? (utilisez les flèches et la touche « retour » pour sélectionner):',
         choices: ['Ajouter un autobus', 'Supprimer un autobus', 'Faire une recherche'],
@@ -72,22 +72,22 @@ const add_a_bus_questions = [
     },
     {
         name: 'seatCount',
-        type: 'nomber',
+        type: 'number',
         message: 'Combien y a-t-il de places assises?'
     },
     {
-        name: 'modelstandingCapacity',
-        type: 'nombre',
+        name: 'standingCapacity',
+        type: 'number',
         message: 'Combien y a-t-il de places debout?'
     },
     {
         name: 'doorCount',
-        type: 'nombre',
+        type: 'number',
         message: 'Combien y a-t-il de portes?'
     },
     {
         name: 'accessCount',
-        type: 'nombre',
+        type: 'number',
         message: 'Combien y a-t-il d\'accès?'
     },
 ];
