@@ -20,7 +20,7 @@ const agency_questions = [
         name: 'choice',
         type: 'list',
         message: 'Que voulez-vous faire? (utilisez les flèches et la touche « retour » pour sélectionner):',
-        choices: ['Ajouter un autobus', 'Supprimer un autobus', 'Faire une recherche'],
+        choices: ['Ajouter un autobus', 'Supprimer un autobus', 'Modifier un autobus', 'Faire une recherche'],
     }
 ];
 
@@ -88,6 +88,20 @@ function ask_agency_questions() {
             ask_add_a_bus_questions();
         } else if (choice === 'Supprimer un autobus') {
             console.log('todo: remove a bus');
+        } else if (choice === 'Modifier un autobus') {
+            const busChoices = [];
+            for (const bus of currentAgency.busInventory) {
+                busChoices.push({'name': `Bus #${bus.id}: ${bus.license}, ${bus.make} ${bus.model}`, 'value': bus.id});
+            }
+
+            inquirer.prompt({
+                name: 'bus_id',
+                type: 'list',
+                message: 'Veuillez choisir l\'autobus à modifier:',
+                choices: busChoices
+            }).then(({ bus_id }) => {
+                ask_modify_a_bus_questions(bus_id);
+            });
         } else if (choice == 'Faire une recherche') {
             console.log('todo: search');
         }
@@ -99,6 +113,37 @@ function ask_add_a_bus_questions() {
         const newBus = new Bus(choices);
         currentAgency.addBusToInventory(newBus);
         writeAgencyToDatabase(currentAgency);
+    });
+}
+
+function ask_modify_a_bus_questions(bus_id) {
+    const bus = currentAgency.getBusById(bus_id);
+
+    const modify_a_bus_questions = [
+        {
+            name: 'attribute',
+            type: 'list',
+            message: 'Quel attribut voulez-vous modifier?',
+            choices: [
+                {'name': `Numéro d\'identification (${bus.id})`, 'value': 'id'},
+                {'name': `Numéro d\'immatriculation (${bus.license})`, 'value': 'license'},
+                {'name': `Fabriquant (${bus.make})`, 'value': 'make'},
+                {'name': `Modèle (${bus.model})`, 'value': 'model'},
+                {'name': `Nombre de places assises (${bus.seatCount})`, 'value': 'seatCount'},
+                {'name': `Nombre de places debout (${bus.standingCount})`, 'value': 'standingCapacity'},
+                {'name': `Nombre de portes (${bus.doorCount})`, 'value': 'doorCount'},
+                {'name': `Nombres de voies d'accès (${bus.accessCount})`, 'value': 'accessCount'}
+            ]
+        }
+    ];
+
+    inquirer.prompt(modify_a_bus_questions).then(({ attribute }) => {
+        inquirer.prompt({'message': "Quelle est la nouvelle valeur?", 'name': 'new_value'}).then(({ new_value }) => {
+            bus[attribute] = new_value;
+            writeAgencyToDatabase(currentAgency);
+            console.log("La modification a été enregistrée.\n");
+            ask_top_menu_questions();
+        });
     });
 }
 
