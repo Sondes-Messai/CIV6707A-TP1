@@ -5,18 +5,6 @@ import inquirer from 'inquirer';
 import { currentAgencies, loadAgencyFromDatabase, writeAgencyToDatabase } from './database.js';
 import { Agency, Bus } from './model.js';
 
-const agencyChoices = [];
-for (const agency of currentAgencies) {
-    agencyChoices.push(agency.shortName);
-}
-
-const agency_select_questions = {
-    name: 'agencyShortName',
-    type: 'list',
-    message: 'Veuillez choisir une agence (utilisez les flèches et la touche « retour » pour sélectionner):',
-    choices: agencyChoices
-};
-
 const top_menu_questions = 
 [
     {
@@ -117,7 +105,17 @@ function ask_add_a_bus_questions() {
 function ask_top_menu_questions() {
     inquirer.prompt(top_menu_questions).then(({ choice }) => {
         if (choice === 'Choisir une agence existante') {
-            inquirer.prompt(agency_select_questions).then(({ agencyShortName }) => {
+            const agencyChoices = [];
+            for (const agency of currentAgencies) {
+                agencyChoices.push(agency.shortName);
+            }
+
+            inquirer.prompt({
+                name: 'agencyShortName',
+                type: 'list',
+                message: 'Veuillez choisir une agence (utilisez les flèches et la touche « retour » pour sélectionner):',
+                choices: agencyChoices
+            }).then(({ agencyShortName }) => {
                 currentAgency = loadAgencyFromDatabase(agencyShortName);
                 ask_agency_questions();
             });
