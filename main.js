@@ -94,23 +94,49 @@ const add_a_bus_questions = [
 
 var currentAgency = null;
 
-inquirer.prompt(top_menu_questions).then(({ choice }) => {
-    if (choice === 'Choisir une agence existante') {
-        inquirer.prompt(agency_select_questions).then(({ agencyShortName }) => {
-            currentAgency = loadAgencyFromDatabase(agencyShortName);
-        });
-    } else if (choice === 'Créer une nouvelle agence') {
-        inquirer.prompt(add_an_agency_questions).then((answers) => {
-            // The variable 'answers' will contain a value for answers.name and answers.shortName, which is
-            // exactly what the constructor of Agency wants.
-            currentAgency = new Agency(answers);
-            writeAgencyToDatabase(currentAgency);
-        });
-    } else if (choice == 'Effacer une agence existante') {
-        // TODO
-    }
-});
+function ask_agency_questions() {
+    inquirer.prompt(agency_questions).then(({ choice }) => {
+        if (choice === 'Ajouter un autobus') {
+            ask_add_a_bus_questions();
+        } else if (choice === 'Supprimer un autobus') {
+            console.log('todo: remove a bus');
+        } else if (choice == 'Faire une recherche') {
+            console.log('todo: search');
+        }
+    });
+}
 
+function ask_add_a_bus_questions() {
+    inquirer.prompt(add_a_bus_questions).then((choices) => {
+        const newBus = new Bus(choices);
+        currentAgency.addBusToInventory(newBus);
+        writeAgencyToDatabase(currentAgency);
+    });
+}
+
+function ask_top_menu_questions() {
+    inquirer.prompt(top_menu_questions).then(({ choice }) => {
+        if (choice === 'Choisir une agence existante') {
+            inquirer.prompt(agency_select_questions).then(({ agencyShortName }) => {
+                currentAgency = loadAgencyFromDatabase(agencyShortName);
+                ask_agency_questions();
+            });
+        } else if (choice === 'Créer une nouvelle agence') {
+            inquirer.prompt(add_an_agency_questions).then((answers) => {
+                // The variable 'answers' will contain a value for answers.name and answers.shortName, which is
+                // exactly what the constructor of Agency wants.
+                currentAgency = new Agency(answers);
+                writeAgencyToDatabase(currentAgency);
+
+                ask_agency_questions();
+            });
+        } else if (choice == 'Effacer une agence existante') {
+            // TODO
+        }
+    });
+}
+
+ask_top_menu_questions();
 /*
 inquirer.prompt(top_menu_questions) //doit changer les fonction flèches pour des fonctions.
     .then(({ actionChoice }) => {
