@@ -210,6 +210,20 @@ function ask_searchBy_bus_questions() {
          }
 
 function ask_top_menu_questions() {
+    const choices = ['Créer une nouvelle agence'];
+    if (currentAgencies.length > 0) {
+        // Only display these choices if there are agencies to be loaded or deleted.
+        choices.push('Choisir une agence existante');
+        choices.push('Effacer une agence existante');
+    }
+
+    const top_menu_questions = {
+            name: 'choice',
+            type: 'list',
+            message: 'Que voulez-vous faire? (utilisez les flèches et la touche « retour » pour sélectionner):',
+            choices: choices,
+    };
+
     inquirer.prompt(top_menu_questions).then(({ choice }) => {
         if (choice === 'Choisir une agence existante') {
             const agencyChoices = [];
