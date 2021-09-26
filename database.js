@@ -6,13 +6,24 @@ export const databasePath = 'data/';
 
 // Create a list of all currently stored agencies.
 export const currentAgencies = [];
-const filesList = fs.readdirSync(databasePath);
-for (const filename of filesList) {
-  if (path.extname(filename) !== '.json')
-    continue;
-  const agency = loadAgencyFromDatabase(filename.split('.')[0]);
-  currentAgencies.push(agency);
+
+function loadCurrentAgencies() {
+  if (!fs.existsSync(databasePath)) {
+    // Return early (to avoid ENOENT error) if the 'data' directory does not exist.
+    return;
+  }
+
+  const filesList = fs.readdirSync(databasePath);
+
+  for (const filename of filesList) {
+    if (path.extname(filename) !== '.json')
+      continue;
+    const agency = loadAgencyFromDatabase(filename.split('.')[0]);
+    currentAgencies.push(agency);
+  }
 }
+
+loadCurrentAgencies();
 
 export function writeAgencyToDatabase(agency) {
   const json = JSON.stringify(agency, null, 2); // 2 spaces for each indentation level.
