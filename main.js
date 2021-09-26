@@ -13,7 +13,7 @@ const top_menu_questions =
         message: 'Que voulez-vous faire? (utilisez les flèches et la touche « retour » pour sélectionner):',
         choices: ['Choisir une agence existante', 'Créer une nouvelle agence', 'Effacer une agence existante'],
     }
-]node main
+]
 
 const agency_questions = [
     {
