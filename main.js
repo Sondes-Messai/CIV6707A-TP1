@@ -13,7 +13,7 @@ const top_menu_questions =
         message: 'Que voulez-vous faire? (utilisez les flèches et la touche « retour » pour sélectionner):',
         choices: ['Choisir une agence existante', 'Créer une nouvelle agence', 'Effacer une agence existante'],
     }
-]
+]node main
 
 const agency_questions = [
     {
@@ -33,7 +33,7 @@ const add_an_agency_questions = [
     {
         name: 'shortName',
         type: 'input',
-        message: 'Quel est le nom court de l\'agence? (ex: stm)'
+        message: 'Quel est l\'abbréviation du nom de l\'agence? (ex: stm)'
     }
 ];
 
@@ -41,7 +41,7 @@ const add_a_bus_questions = [
     {
         name: 'id',
         type: 'number',
-        message: 'Quel est l\'identifiant de l\'autobus (sans espaces ni charactères spéciaux)?'
+        message: 'Quel est le numéro l\'identifiant de l\'autobus (sans espaces ni charactères spéciaux)?'
     },
     {
         name: 'license',
@@ -56,7 +56,7 @@ const add_a_bus_questions = [
     {
         name: 'model',
         type: 'input',
-        message: 'Quel est le modèl de l\'autobus?'
+        message: 'Quel est le modèle de l\'autobus?'
     },
     {
         name: 'seatCount',
@@ -78,6 +78,15 @@ const add_a_bus_questions = [
         type: 'number',
         message: 'Combien y a-t-il d\'accès?'
     },
+];
+
+const searchBy_bus_question = [
+    {
+        name : 'searchBy_choice' // ou appeler slmt choice?
+        type : 'list'
+        message:'Chercher l\'information de l\'autobus par :',
+        choices : ['numéro d\'identifiant', 'numéro de plaque d\'immatriculation', 'fabriquant', 'moodèle', 'nombre de places assises', 'nombre de places debout', 'nombre de porte', 'nombre d\'accès']
+    }
 ];
 
 var currentAgency = null;
@@ -137,6 +146,7 @@ function ask_modify_a_bus_questions(bus_id) {
         }
     ];
 
+
     inquirer.prompt(modify_a_bus_questions).then(({ attribute }) => {
         inquirer.prompt({'message': "Quelle est la nouvelle valeur?", 'name': 'new_value'}).then(({ new_value }) => {
             bus[attribute] = new_value;
@@ -146,6 +156,58 @@ function ask_modify_a_bus_questions(bus_id) {
         });
     });
 }
+
+function ask_searchBy_bus_questions() {
+    inquirer.prompt(bus_searchBy_question).then(({searchBy_chocie})=>{
+        if (searchBy_choice ==='numéro d\'identifiant') {
+            inquirer.prompt({name :'searchId',message : 'Entrez le numéro d\'identifiant', type : 'number'})
+            let searchResults = [];
+            searchResults = currentAgency.filter((searchResults)=>currentAgency.id === 'searchId');
+            console.log(searchResults);
+            }
+        else if (searchBy_choice ==='numéro de plaque d\'immatriculation') {
+            inquirer.prompt({name :'searchLicense',message : 'Entrez le numéro de plaque d\'immatriculation', type : 'input'})
+            let searchResults = [];
+            searchResults = currentAgency.filter((searchResults)=>currentAgency.license === 'searchLicense');
+            console.log(searchResults);    
+            }
+        else if (searchBy_choice ==='fabriquant') {
+            inquirer.prompt({name :'searchMake',message : 'Entrez le nom du fabriquant', type : 'input'})
+            let searchResults = [];
+            searchResults = currentAgency.filter((searchResults)=>currentAgency.make === 'searchMake');
+            console.log(searchResults);    
+            }
+        else if (searchBy_choice ==='modèle') {
+            inquirer.prompt({name :'searchModel',message : 'Entrez le nom du modèle', type : 'input'})
+            let searchResults = [];
+            searchResults = currentAgency.filter((searchResults)=>currentAgency.model === 'searchModel');
+            console.log(searchResults);  
+            }
+        else if (searchBy_choice ==='nombre de places assises') {
+            inquirer.prompt({name :'searchSeatCount',message : 'Entrez le nombre de places assises', type : 'number'})
+            let searchResults = [];
+            searchResults = currentAgency.filter((searchResults)=>currentAgency.seatCount === 'searchSeatCount');
+            console.log(searchResults);  
+            }
+        else if (searchBy_choice ==='nombre de place debout') {
+            inquirer.prompt({name :'searchStandingCount',message : 'Entrez le nombre de places debout', type : 'number'})
+            let searchResults = [];
+            searchResults = currentAgency.filter((searchResults)=>currentAgency.standingCount === 'searchStandingCount');
+            console.log(searchResults);          
+            }     
+        else if (searchBy_choice ==='nombre de porte') {
+            inquirer.prompt({name :'searchDoorCount',message : 'Entrez le nombre de porte', type : 'number'})
+            let searchResults = [];
+            searchResults = currentAgency.filter((searchResults)=>currentAgency.doorCount === 'searchDoorCount');
+            console.log(searchResults);          
+            }    
+        else if (searchBy_choice ==='nombre d\'accès') {
+            inquirer.prompt({name :'searchAccesCount',message : 'Entrez le nombre d'\'accès', type : 'number'})
+            let searchResults = [];
+            searchResults = currentAgency.filter((searchResults)=>currentAgency.accessCount === 'searchAccessCount');
+            console.log(searchResults);          
+                }         
+         }
 
 function ask_top_menu_questions() {
     inquirer.prompt(top_menu_questions).then(({ choice }) => {
