@@ -13,7 +13,7 @@ const top_menu_questions =
         message: 'Que voulez-vous faire? (utilisez les flèches et la touche « retour » pour sélectionner):',
         choices: ['Choisir une agence existante', 'Créer une nouvelle agence', 'Effacer une agence existante'],
     }
-]
+];
 
 const agency_questions = [
     {
@@ -82,11 +82,20 @@ const add_a_bus_questions = [
 
 const searchBy_bus_question = [
     {
-        name : 'searchBy_choice' // ou appeler slmt choice?
-        type : 'list'
+        name : 'searchBy_choice', // ou appeler slmt choice?
+        type : 'list',
         message:'Chercher l\'information de l\'autobus par :',
         choices : ['numéro d\'identifiant', 'numéro de plaque d\'immatriculation', 'fabriquant', 'moodèle', 'nombre de places assises', 'nombre de places debout', 'nombre de porte', 'nombre d\'accès']
     }
+];
+const deleteBy_bus_question = [
+    {
+        name : 'deleteBy_choice', // ou appeler slmt choice?
+        type : 'list',
+        message:'Supprimer un ou des autobus par :',
+        choices : ['numéro d\'identifiant', 'numéro de plaque d\'immatriculation', 'fabriquant', 'moodèle', 'nombre de places assises', 'nombre de places debout', 'nombre de porte', 'nombre d\'accès']
+    }
+    
 ];
 
 var currentAgency = null;
@@ -96,7 +105,7 @@ function ask_agency_questions() {
         if (choice === 'Ajouter un autobus') {
             ask_add_a_bus_questions();
         } else if (choice === 'Supprimer un autobus') {
-            console.log('todo: remove a bus');
+            ask_deleteBy_bus_questions();
         } else if (choice === 'Modifier un autobus') {
             const busChoices = [];
             for (const bus of currentAgency.busInventory) {
@@ -112,7 +121,7 @@ function ask_agency_questions() {
                 ask_modify_a_bus_questions(bus_id);
             });
         } else if (choice == 'Faire une recherche') {
-            console.log('todo: search');
+            ask_searchBy_bus_questions();
         }
     });
 }
@@ -156,9 +165,9 @@ function ask_modify_a_bus_questions(bus_id) {
         });
     });
 }
-
+//fonction ask_searchBy_bus_questions() incomplète. La 2e question ne se déclenche pas.
 function ask_searchBy_bus_questions() {
-    inquirer.prompt(bus_searchBy_question).then(({searchBy_chocie})=>{
+    inquirer.prompt(searchBy_bus_question).then(({searchBy_choice})=>{
         if (searchBy_choice ==='numéro d\'identifiant') {
             inquirer.prompt({name :'searchId',message : 'Entrez le numéro d\'identifiant', type : 'number'})
             let searchResults = [];
@@ -202,12 +211,33 @@ function ask_searchBy_bus_questions() {
             console.log(searchResults);          
             }    
         else if (searchBy_choice ==='nombre d\'accès') {
-            inquirer.prompt({name :'searchAccesCount',message : 'Entrez le nombre d'\'accès', type : 'number'})
+            inquirer.prompt({name :'searchAccesCount',message : 'Entrez le nombre d\'accès', type : 'number'})
             let searchResults = [];
             searchResults = currentAgency.filter((searchResults)=>currentAgency.accessCount === 'searchAccessCount');
             console.log(searchResults);          
                 }         
-         }
+         })
+        };
+//fonction ask_deleteBy_bus_questions() incomplète. La 2e question ne se déclenche pas.
+function ask_deleteBy_bus_questions()    {
+    inquirer.prompt(deleteBy_bus_question).then(({deleteBy_choice})=>{
+        if (deleteBy_choice ==='numéro d\'identifiant') {
+            inquirer.prompt({name :'deleteId', message : 'Entrez le numéro d\'identifiant', type : 'number'})
+            let searchResults =  [];
+            for( let i = 0; i < currentAgency.length; i++){ 
+                if (currentAngency.length[i].id === deleteId) {
+                    searchResults.push()
+                    return searchResults}}
+                    inquirer.prompt({name:'verification',message : 'Voici le ou les autobus qui seront supprimés, veuillez confirmer (Y : supprimer, N : annuler la supression) ', type : 'confirm'})
+                    if (verification = true){
+                        currentAgency.splice(i);
+                        i--;
+                    }
+        else if (deleteBy_choice === 'numéro de plaque d\'immatriculation' && deleteBy_choice ==='verification') {
+            console.log ('todo à compléter si fonctionne')}
+                }}
+    )};    
+           
 
 function ask_top_menu_questions() {
     const choices = ['Créer une nouvelle agence'];
@@ -250,7 +280,7 @@ function ask_top_menu_questions() {
                 ask_agency_questions();
             });
         } else if (choice == 'Effacer une agence existante') {
-            // TODO
+            inquirer.prompt()
         }
     });
 }
