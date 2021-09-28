@@ -168,10 +168,11 @@ function ask_modify_a_bus_questions(bus_id) {
 //fonction ask_searchBy_bus_questions() incomplète. La 2e question ne se déclenche pas.
 function ask_searchBy_bus_questions() {
     inquirer.prompt(searchBy_bus_question).then(({searchBy_choice})=>{
+       
         if (searchBy_choice ==='numéro d\'identifiant') {
             inquirer.prompt({name :'searchId',message : 'Entrez le numéro d\'identifiant', type : 'number'})
             let searchResults = [];
-            searchResults = currentAgency.filter((searchResults)=>currentAgency.id === 'searchId');
+            searchResults = currentAgency.filter((searchResults)=>currentAgency.id === searchId);
             console.log(searchResults);
             }
         else if (searchBy_choice ==='numéro de plaque d\'immatriculation') {
@@ -217,7 +218,7 @@ function ask_searchBy_bus_questions() {
             console.log(searchResults);          
                 }         
          })
-        };
+        };*/
 //fonction ask_deleteBy_bus_questions() incomplète. La 2e question ne se déclenche pas.
 function ask_deleteBy_bus_questions()    {
     inquirer.prompt(deleteBy_bus_question).then(({deleteBy_choice})=>{
@@ -226,7 +227,7 @@ function ask_deleteBy_bus_questions()    {
             let searchResults =  [];
             for( let i = 0; i < currentAgency.length; i++){ 
                 if (currentAngency.length[i].id === deleteId) {
-                    searchResults.push()
+                   // searchResults.push()
                     return searchResults}}
                     inquirer.prompt({name:'verification',message : 'Voici le ou les autobus qui seront supprimés, veuillez confirmer (Y : supprimer, N : annuler la supression) ', type : 'confirm'})
                     if (verification = true){
@@ -286,48 +287,3 @@ function ask_top_menu_questions() {
 }
 
 ask_top_menu_questions();
-/*
-inquirer.prompt(top_menu_questions) //doit changer les fonction flèches pour des fonctions.
-    .then(({ actionChoice }) => {
-        switch (actionChoice) {
-            case 'Ajouter un autobus':
-                return inquirer.prompt(add_a_bus_questions)
-            case 'Supprimer un autobus':
-                console.log('code pour supprimer');
-                break;
-            default:
-                console.log('code pour recher à ajouter')
-        }
-    })
-
-*/
-//création d'une fonction qui permet l'ajout d'un bus dans la base de donnée busDB
-const busDB = [];
-const addBus = function (id, license, make, model, seatCount, standingCount, doorCount, accessCount) {
-    const bus = {
-        id: id,
-        license: license,
-        make: make,
-        model: model,
-        seatCount: seatCount,
-        standingCount: standingCount,
-        doorCount: doorCount,
-        accessCount: accessCount
-    };
-    busDB.push(bus);
-    return bus;
-};
-
-// création d'une fonction qui permet l'ajout d'une agence dans la base de donnée agencyDB
-
-const agencyDB = [];
-const addAgency = function (name, shortName, busInventory) {
-    const agency = {
-        name: name,
-        shortName: shortName,
-        busInventory: busInventory
-    };
-    agencyDB.push(agency);
-    return agency;
-};
-
