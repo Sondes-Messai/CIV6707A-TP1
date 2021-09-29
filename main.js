@@ -11,7 +11,7 @@ const top_menu_questions =
         name: 'choice',
         type: 'list',
         message: 'Que voulez-vous faire? (utilisez les flèches et la touche « retour » pour sélectionner):',
-        choices: ['Choisir une agence existante', 'Créer une nouvelle agence', 'Effacer une agence existante'],
+        choices: ['Choisir une agence existante', 'Créer une nouvelle agence', 'Effacer une agence existante' ],
     }
 ];
 
@@ -82,18 +82,18 @@ const add_a_bus_questions = [
 
 const searchBy_bus_question = [
     {
-        name : 'searchBy_choice', // ou appeler slmt choice?
+        name : 'choice',
         type : 'list',
         message:'Chercher l\'information de l\'autobus par :',
-        choices : ['numéro d\'identifiant', 'numéro de plaque d\'immatriculation', 'fabriquant', 'moodèle', 'nombre de places assises', 'nombre de places debout', 'nombre de porte', 'nombre d\'accès']
+        choices : ['numéro d\'identifiant', 'numéro de plaque d\'immatriculation', /*'fabriquant', 'moodèle', 'nombre de places assises', 'nombre de places debout', 'nombre de porte', 'nombre d\'accès'*/]
     }
 ];
 const deleteBy_bus_question = [
     {
-        name : 'deleteBy_choice', // ou appeler slmt choice?
+        name : 'choice',
         type : 'list',
         message:'Supprimer un ou des autobus par :',
-        choices : ['numéro d\'identifiant', 'numéro de plaque d\'immatriculation', 'fabriquant', 'moodèle', 'nombre de places assises', 'nombre de places debout', 'nombre de porte', 'nombre d\'accès']
+        choices : ['numéro d\'identifiant', 'numéro de plaque d\'immatriculation', /*'fabriquant', 'moodèle', 'nombre de places assises', 'nombre de places debout', 'nombre de porte', 'nombre d\'accès'*/]
     }
     
 ];
@@ -121,7 +121,7 @@ function ask_agency_questions() {
                 ask_modify_a_bus_questions(bus_id);
             });
         } else if (choice == 'Faire une recherche') {
-            ask_searchBy_bus_questions();
+            ask_searchBy_bus_question();
         }
     });
 }
@@ -165,7 +165,40 @@ function ask_modify_a_bus_questions(bus_id) {
         });
     });
 }
-//fonction ask_searchBy_bus_questions() incomplète. La 2e question ne se déclenche pas.
+
+// fonction ask_searchBy_bus_questions() en format async function partie 1/2
+const ask_searchBy_bus_question = async function(){
+    const choice1 = await inquirer.prompt(searchBy_bus_question)
+        .then(({choice}) => { //comment faire le .then sans la flèche si on n'a pas de fonction à mettre?
+        if (choice ==='numéro d\'identifiant') {
+            ask_searchBy_bus_question2();
+        /*searchID = inquirer.prompt({name :'searchId',message : 'Entrez le numéro d\'identifiant', type : 'number'})
+        let searchResults = [];
+        searchResults = currentAgency.filter((searchResults)=>currentAgency.id === searchId);
+        console.log(searchResults);*/ //return console.log ("ok, if")
+        }
+        else {
+        return console.log(choice1)}
+    } ) }
+//chercher un bus par identifiant partie 2/2:
+const ask_searchBy_bus_question2 = async function(){
+    const searchedId = await inquirer.prompt({name :'searchedId',message : 'Entrez le numéro d\'identifiant', type : 'number'})
+        .then(({searchedId}) => {
+            if (isNaN(searchedId) ===false) {
+                return "Veuillez entrer le bon format (nombre sans caractères spéciaux ni espaces)"
+            }
+            else {
+            let searchResult = [];
+            searchResult = currentAgency.busInventory.filter((autobus) => autobus.id === searchedId);
+            return searchResult
+            }} ) }
+
+        
+      
+    
+
+
+/*//fonction ask_searchBy_bus_questions() incomplète. La 2e question ne se déclenche pas.
 function ask_searchBy_bus_questions() {
     inquirer.prompt(searchBy_bus_question).then(({searchBy_choice})=>{
        
@@ -218,7 +251,8 @@ function ask_searchBy_bus_questions() {
             console.log(searchResults);          
                 }         
          })
-        };*/
+        }; 
+        */
 //fonction ask_deleteBy_bus_questions() incomplète. La 2e question ne se déclenche pas.
 function ask_deleteBy_bus_questions()    {
     inquirer.prompt(deleteBy_bus_question).then(({deleteBy_choice})=>{
