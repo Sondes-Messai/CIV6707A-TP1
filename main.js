@@ -191,69 +191,7 @@ const ask_searchBy_bus_license = async function (){
             console.log(searchResult)
             } )}
 
-                /*searchID = inquirer.prompt({name :'searchId',message : 'Entrez le numéro d\'identifiant', type : 'number'})
-        let searchResults = [];
-        searchResults = currentAgency.filter((searchResults)=>currentAgency.id === searchId);
-        console.log(searchResults);*/ //return console.log ("ok, if")
-      
-    
-
-
-/*//fonction ask_searchBy_bus_questions() incomplète. La 2e question ne se déclenche pas.
-function ask_searchBy_bus_questions() {
-    inquirer.prompt(searchBy_bus_question).then(({searchBy_choice})=>{
-       
-        if (searchBy_choice ==='numéro d\'identifiant') {
-            inquirer.prompt({name :'searchId',message : 'Entrez le numéro d\'identifiant', type : 'number'})
-            let searchResults = [];
-            searchResults = currentAgency.filter((searchResults)=>currentAgency.id === searchId);
-            console.log(searchResults);
-            }
-        else if (searchBy_choice ==='numéro de plaque d\'immatriculation') {
-            inquirer.prompt({name :'searchLicense',message : 'Entrez le numéro de plaque d\'immatriculation', type : 'input'})
-            let searchResults = [];
-            searchResults = currentAgency.filter((searchResults)=>currentAgency.license === 'searchLicense');
-            console.log(searchResults);    
-            }
-        else if (searchBy_choice ==='fabriquant') {
-            inquirer.prompt({name :'searchMake',message : 'Entrez le nom du fabriquant', type : 'input'})
-            let searchResults = [];
-            searchResults = currentAgency.filter((searchResults)=>currentAgency.make === 'searchMake');
-            console.log(searchResults);    
-            }
-        else if (searchBy_choice ==='modèle') {
-            inquirer.prompt({name :'searchModel',message : 'Entrez le nom du modèle', type : 'input'})
-            let searchResults = [];
-            searchResults = currentAgency.filter((searchResults)=>currentAgency.model === 'searchModel');
-            console.log(searchResults);  
-            }
-        else if (searchBy_choice ==='nombre de places assises') {
-            inquirer.prompt({name :'searchSeatCount',message : 'Entrez le nombre de places assises', type : 'number'})
-            let searchResults = [];
-            searchResults = currentAgency.filter((searchResults)=>currentAgency.seatCount === 'searchSeatCount');
-            console.log(searchResults);  
-            }
-        else if (searchBy_choice ==='nombre de place debout') {
-            inquirer.prompt({name :'searchStandingCount',message : 'Entrez le nombre de places debout', type : 'number'})
-            let searchResults = [];
-            searchResults = currentAgency.filter((searchResults)=>currentAgency.standingCount === 'searchStandingCount');
-            console.log(searchResults);          
-            }     
-        else if (searchBy_choice ==='nombre de porte') {
-            inquirer.prompt({name :'searchDoorCount',message : 'Entrez le nombre de porte', type : 'number'})
-            let searchResults = [];
-            searchResults = currentAgency.filter((searchResults)=>currentAgency.doorCount === 'searchDoorCount');
-            console.log(searchResults);          
-            }    
-        else if (searchBy_choice ==='nombre d\'accès') {
-            inquirer.prompt({name :'searchAccesCount',message : 'Entrez le nombre d\'accès', type : 'number'})
-            let searchResults = [];
-            searchResults = currentAgency.filter((searchResults)=>currentAgency.accessCount === 'searchAccessCount');
-            console.log(searchResults);          
-                }         
-         })
-        }; 
-        */
+ 
 //fonction ask_deleteBy_bus_questions() incomplète. La 2e question ne se déclenche pas.
 function ask_deleteBy_bus_questions()    {
     inquirer.prompt(deleteBy_bus_question).then(({deleteBy_choice})=>{
