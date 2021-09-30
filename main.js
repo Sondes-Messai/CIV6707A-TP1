@@ -165,7 +165,7 @@ function ask_modify_a_bus_questions(bus_id) {
         });
     });
 }
-// fonction ask_deleteBy_bus_question()
+// fonction ask_deleteBy_bus_question() pour demander par quelle information l'usager souhaite supprimer le bus
 const ask_deleteBy_bus_question = async function()  {
     const choice = await inquirer.prompt(deleteBy_bus_question)
         .then(({choice}) => { //comment faire le .then sans la flèche si on n'a pas de fonction à mettre?
@@ -176,7 +176,7 @@ const ask_deleteBy_bus_question = async function()  {
             }
         } ) 
 }
-// fonction ask_searchBy_bus_question() en format async function partie 1/2
+// fonction ask_searchBy_bus_question() pour demander par quelle information l'usager souhaite chercher le bus en format async function partie 1/2
 const ask_searchBy_bus_question = async function()  {
     const choice = await inquirer.prompt(searchBy_bus_question)
         .then(({choice}) => { //comment faire le .then sans la flèche si on n'a pas de fonction à mettre?
@@ -187,36 +187,14 @@ const ask_searchBy_bus_question = async function()  {
             }
         } ) 
 }
-/*//chercher un bus par identifiant partie 2/2 FONCTIONNE:
+//chercher un bus par identifiant partie 2/2 
 const ask_searchBy_bus_id = async function(){
     const searchedId = await inquirer.prompt({name :'searchedId', message : 'Entrez le numéro d\'identifiant', type : 'number'})
         .then(({searchedId}) => {
             let searchResult = currentAgency.busInventory.filter((autobus) => autobus.id === searchedId);
             console.log(searchResult)
            
-            } )}*/
-
-//chercher un bus par identifiant partie 2/2 test : ajout de delete
-const ask_searchBy_bus_id = async function(){
-    const searchedId = await inquirer.prompt({name :'searchedId', message : 'Entrez le numéro d\'identifiant', type : 'number'})
-        .then(({searchedId}) => {
-            let searchResult = currentAgency.busInventory.filter((autobus) => autobus.id === searchedId);
-            console.log(searchResult)
-        } )
-     }
-            
-
-
-    //const deleteBus = inquirer.prompt({name :'deleteBus', message : 'Voulez-vous supprimer ce bus? (Y pour oui, N pour non)', type : 'confirm'})
-    /*.then ((answers) => {
-        if (deleteBus ===true) {
-            const confirmDeleteBus = inquirer.prompt(
-            {name :'confirmDeleteBus', message : 'Voulez-vous vraiment supprimer ce bus? (Y pour oui, N pour non)', type : 'confirm'});
-        }
-            else {console.log("exit")}
-        //if (deleteBus === true && confirmDeleteBus === true) {
-          //  console.log('will be delete')
-        })}*/
+            } )}
 
 //chercher un bus par planque d'immatriculation partie 2/2:
 const ask_searchBy_bus_license = async function (){
@@ -225,7 +203,7 @@ const ask_searchBy_bus_license = async function (){
             let searchResult = currentAgency.busInventory.filter((autobus) => autobus.license === searchedLicense);
             console.log(searchResult)
             } )}
-
+// supprimer un bus incomplet, ne fonctionne pas
 const ask_deleteBy_bus_id = async function(){
     const deleteId = await inquirer.prompt({name : 'deleteId', message : 'Entrez l\'identifiant du bus à supprimer', type : 'number'})
         .then (({deleteId})=> {
@@ -237,28 +215,7 @@ const ask_deleteBy_bus_id = async function(){
             } })
         }
 
-//fonction ask_deleteBy_bus_questions() incomplète. La 2e question ne se déclenche pas.
-/*const ask_deleteBy_bus_question = async function ()   {
-    const choice = await inquirer.prompt(deleteBy_bus_question)
-        .then(({choice})=>{
-            if (deleteId ==='numéro d\'identifiant') {
-        const searchedId = await inquirer.prompt({name :'deleteId', message : 'Entrez le numéro d\'identifiant', type : 'number'})
-        
-            
-            let searchResults =  [];
-            for( let i = 0; i < currentAgency.length; i++){ 
-                if (currentAngency.length[i].id === deleteId) {
-                   // searchResults.push()
-                    return searchResults}}
-                    inquirer.prompt({name:'verification',message : 'Voici le ou les autobus qui seront supprimés, veuillez confirmer (Y : supprimer, N : annuler la supression) ', type : 'confirm'})
-                    if (verification = true){
-                        currentAgency.splice(i);
-                        i--;
-                    }
-        else if (deleteBy_choice === 'numéro de plaque d\'immatriculation' && deleteBy_choice ==='verification') {
-            console.log ('todo à compléter si fonctionne')}
-                }}
-    )};    */
+
            
 
 function ask_top_menu_questions() {
