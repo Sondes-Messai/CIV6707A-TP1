@@ -18,10 +18,18 @@ class Agency {
     this.busInventory = obj.busInventory || []; // Default to an empty list if busInvestory is not specified.
   }
 
-  getBusById(id) {
+  _getBusByAttribute(attribute, value) {
     return this.busInventory.find(obj => {
-      return obj.id === id
-    });
+      return obj[attribute] === value
+    });    
+  }
+
+  getBusById(id) {
+    return this._getBusByAttribute('id', id);
+  }
+
+  getBusByLicense(license) {
+    return this._getBusByAttribute('license', license);
   }
 
   addBusToInventory(bus) {
