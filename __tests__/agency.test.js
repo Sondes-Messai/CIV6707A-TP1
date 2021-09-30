@@ -73,3 +73,14 @@ test('verifies Agency.getBusById', () => {
   expect(fakeAgency.getBusById(fakeBus.id)).toEqual(fakeBus);
 });
 
+test('verifies Agency.getBusById == Agency.getBusByLicense', () => {
+  const fakeAgency = createFakeAgency();
+
+  // Create two a fake bus. We should be able to find this bus
+  // either by ID or by license.
+  const fakeBus = createFakeBus();
+
+  fakeAgency.addBusToInventory(fakeBus);
+
+  expect(fakeAgency.getBusById(fakeBus.id)).toEqual(fakeAgency.getBusByLicense(fakeBus.license));
+});
