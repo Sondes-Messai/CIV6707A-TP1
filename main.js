@@ -97,10 +97,7 @@ function ask_agency_questions() {
         } else if (choice === 'Supprimer un autobus') {
             ask_delete_a_bus_questions();
         } else if (choice === 'Modifier un autobus') {
-            const busChoices = [];
-            for (const bus of currentAgency.busInventory) {
-                busChoices.push({'name': `Bus #${bus.id}: ${bus.license}, ${bus.make} ${bus.model}`, 'value': bus.id});
-            }
+            const busChoices = generate_list_of_bus_choices();
 
             inquirer.prompt({
                 name: 'bus_id',
@@ -118,6 +115,16 @@ function ask_agency_questions() {
     });
 }
 
+function generate_list_of_bus_choices() {
+    const busChoices = [];
+    
+    for (const bus of currentAgency.busInventory) {
+        busChoices.push({'name': `Bus #${bus.id}: ${bus.license}, ${bus.make} ${bus.model}`, 'value': bus.id});
+    }
+
+    return busChoices;
+}
+
 function ask_add_a_bus_questions() {
     inquirer.prompt(add_a_bus_questions).then((choices) => {
         const newBus = new Bus(choices);
@@ -129,11 +136,7 @@ function ask_add_a_bus_questions() {
 }
 
 function ask_delete_a_bus_questions() {
-    const busChoices = [];
-    for (const bus of currentAgency.busInventory) {
-        busChoices.push({'name': `Bus #${bus.id}: ${bus.license}, ${bus.make} ${bus.model}`, 'value': bus.id});
-    }
-
+    busChoices = generate_list_of_bus_choices();
     inquirer.prompt({
         name: 'bus_id',
         type: 'list',
