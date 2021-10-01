@@ -11,7 +11,7 @@ const top_menu_questions =
         name: 'choice',
         type: 'list',
         message: 'Que voulez-vous faire? (utilisez les flèches et la touche « retour » pour sélectionner):',
-        choices: ['Choisir une agence existante', 'Créer une nouvelle agence', 'Effacer une agence existante' ],
+        choices: ['Choisir une agence existante', 'Créer une nouvelle agence', 'Effacer une agence existante', 'Quitter l\'application'],
     }
 ];
 
@@ -20,7 +20,7 @@ const agency_questions = [
         name: 'choice',
         type: 'list',
         message: 'Que voulez-vous faire? (utilisez les flèches et la touche « retour » pour sélectionner):',
-        choices: ['Ajouter un autobus', 'Supprimer un autobus', 'Modifier un autobus', 'Faire une recherche'],
+        choices: ['Ajouter un autobus', 'Supprimer un autobus', 'Modifier un autobus', 'Faire une recherche', 'Quitter l\'application'],
     }
 ];
 
@@ -93,7 +93,7 @@ const deleteBy_bus_question = [
         name : 'choice',
         type : 'list',
         message:'Supprimer un ou des autobus par :',
-        choices : ['numéro d\'identifiant', 'numéro de plaque d\'immatriculation', /*'fabriquant', 'moodèle', 'nombre de places assises', 'nombre de places debout', 'nombre de porte', 'nombre d\'accès'*/]
+        choices : ['numéro d\'identifiant', 'numéro de plaque d\'immatriculation' /*'fabriquant', 'moodèle', 'nombre de places assises', 'nombre de places debout', 'nombre de porte', 'nombre d\'accès'*/]
     }
     
 ];
@@ -122,6 +122,8 @@ function ask_agency_questions() {
             });
         } else if (choice == 'Faire une recherche') {
             ask_searchBy_bus_question();
+        } else if (choice == 'Quitter l\'application') {
+            process.exit()
         }
     });
 }
@@ -227,6 +229,7 @@ function ask_top_menu_questions() {
         // Only display these choices if there are agencies to be loaded or deleted.
         choices.push('Choisir une agence existante');
         choices.push('Effacer une agence existante');
+        choices.push('Quitter l\'application');
     }
 
     const top_menu_questions = {
@@ -263,6 +266,8 @@ function ask_top_menu_questions() {
             });
         } else if (choice == 'Effacer une agence existante') {
             inquirer.prompt()
+        } else if (choice === 'Quitter l\'application') {
+            process.exit()
         }
     });
 }
