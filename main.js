@@ -78,15 +78,6 @@ const searchBy_bus_question = [
         choices : ['numéro d\'identifiant', 'numéro de plaque d\'immatriculation', /*'fabriquant', 'moodèle', 'nombre de places assises', 'nombre de places debout', 'nombre de porte', 'nombre d\'accès'*/]
     }
 ];
-const deleteBy_bus_question = [
-    {
-        name : 'choice',
-        type : 'list',
-        message:'Supprimer un ou des autobus par :',
-        choices : ['numéro d\'identifiant', 'numéro de plaque d\'immatriculation' /*'fabriquant', 'moodèle', 'nombre de places assises', 'nombre de places debout', 'nombre de porte', 'nombre d\'accès'*/]
-    }
-    
-];
 
 var currentAgency = null;
 
