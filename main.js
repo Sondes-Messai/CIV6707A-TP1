@@ -11,7 +11,7 @@ const top_menu_questions =
         name: 'choice',
         type: 'list',
         message: 'Que voulez-vous faire? (utilisez les flèches et la touche « retour » pour sélectionner):',
-        choices: ['Choisir une agence existante', 'Créer une nouvelle agence', 'Effacer une agence existante' ],
+        choices: ['Choisir une agence existante', 'Créer une nouvelle agence'],
     }
 ];
 
@@ -261,8 +261,6 @@ function ask_top_menu_questions() {
 
                 ask_agency_questions();
             });
-        } else if (choice == 'Effacer une agence existante') {
-            inquirer.prompt()
         }
     });
 }
