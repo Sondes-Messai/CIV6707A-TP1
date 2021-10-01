@@ -5,16 +5,6 @@ import inquirer from 'inquirer';
 import { currentAgencies, loadAgencyFromDatabase, writeAgencyToDatabase } from './database.js';
 import { Agency, Bus } from './model.js';
 
-const top_menu_questions = 
-[
-    {
-        name: 'choice',
-        type: 'list',
-        message: 'Que voulez-vous faire? (utilisez les flèches et la touche « retour » pour sélectionner):',
-        choices: ['Choisir une agence existante', 'Créer une nouvelle agence', 'Effacer une agence existante', 'Quitter l\'application'],
-    }
-];
-
 const agency_questions = [
     {
         name: 'choice',
@@ -145,6 +135,7 @@ function ask_modify_a_bus_questions(bus_id) {
         {
             name: 'attribute',
             type: 'list',
+            loop: false,
             message: 'Quel attribut voulez-vous modifier?',
             choices: [
                 {'name': `Numéro d\'identification (${bus.id})`, 'value': 'id'},
@@ -226,9 +217,8 @@ const ask_deleteBy_bus_id = async function(){
 function ask_top_menu_questions() {
     const choices = ['Créer une nouvelle agence'];
     if (currentAgencies.length > 0) {
-        // Only display these choices if there are agencies to be loaded or deleted.
+        // Only display this choice if there are agencies to be loaded.
         choices.push('Choisir une agence existante');
-        choices.push('Effacer une agence existante');
         choices.push('Quitter l\'application');
     }
 
