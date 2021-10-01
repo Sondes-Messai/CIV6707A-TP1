@@ -130,7 +130,7 @@ function ask_add_a_bus_questions() {
         const newBus = new Bus(choices);
         currentAgency.addBusToInventory(newBus);
         writeAgencyToDatabase(currentAgency);
-        console.log("L'autobus a été ajouté.");
+        console.log("L'autobus a été ajouté.\n");
         ask_agency_questions();
     });
 }
@@ -173,7 +173,6 @@ function ask_modify_a_bus_questions(bus_id) {
         }
     ];
 
-
     inquirer.prompt(modify_a_bus_questions).then(({ attribute }) => {
         inquirer.prompt({'message': "Quelle est la nouvelle valeur?", 'name': 'new_value'}).then(({ new_value }) => {
             bus[attribute] = new_value;
@@ -183,17 +182,7 @@ function ask_modify_a_bus_questions(bus_id) {
         });
     });
 }
-// fonction ask_delete_a_bus_questions() pour demander par quelle information l'usager souhaite supprimer le bus
-const ask_deleteBy_bus_question = async function()  {
-    const choice = await inquirer.prompt(deleteBy_bus_question)
-        .then(({choice}) => { //comment faire le .then sans la flèche si on n'a pas de fonction à mettre?
-            if (choice ==='numéro d\'identifiant') {
-             ask_deleteBy_bus_id();
-            }
-            else {ask_searchBy_bus_license();
-            }
-        } ) 
-}
+
 // fonction ask_searchBy_bus_question() pour demander par quelle information l'usager souhaite chercher le bus en format async function partie 1/2
 const ask_searchBy_bus_question = async function()  {
     const choice = await inquirer.prompt(searchBy_bus_question)
@@ -222,17 +211,6 @@ const ask_searchBy_bus_license = async function (){
             console.log(searchResult)
             ask_top_menu_questions();
             } )}
-// supprimer un bus incomplet, ne fonctionne pas
-const ask_deleteBy_bus_id = async function(){
-    const deleteId = await inquirer.prompt({name : 'deleteId', message : 'Entrez l\'identifiant du bus à supprimer', type : 'number'})
-        .then (({deleteId})=> {
-            for (let i = 0; i < currentAgency.busInventory.length; i++){
-                if (currentAgency.busInventory[i].id === deleteId) {
-                    currentAgency.busInventory.splice(i, 1);
-                    i--;
-                }
-            } })
-        }
 
 function ask_top_menu_questions() {
     const choices = ['Créer une nouvelle agence', 'Quitter l\'application'];
