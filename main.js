@@ -131,6 +131,8 @@ function ask_add_a_bus_questions() {
         const newBus = new Bus(choices);
         currentAgency.addBusToInventory(newBus);
         writeAgencyToDatabase(currentAgency);
+        console.log("L'autobus a été ajoutée");
+        ask_top_menu_questions();
     });
 }
 
@@ -193,15 +195,16 @@ const ask_searchBy_bus_id = async function(){
         .then(({searchedId}) => {
             let searchResult = currentAgency.busInventory.filter((autobus) => autobus.id === searchedId);
             console.log(searchResult)
-           
+            ask_top_menu_questions();
             } )}
 
-//chercher un bus par planque d'immatriculation partie 2/2:
+//chercher un bus par plaque d'immatriculation partie 2/2:
 const ask_searchBy_bus_license = async function (){
     const searchedLiscence = await inquirer.prompt({name :'searchedLicense', message : 'Entrez la plaque d\'immatriculation', type : 'input'})
         .then(({searchedLicense}) => {
             let searchResult = currentAgency.busInventory.filter((autobus) => autobus.license === searchedLicense);
             console.log(searchResult)
+            ask_top_menu_questions();
             } )}
 // supprimer un bus incomplet, ne fonctionne pas
 const ask_deleteBy_bus_id = async function(){
