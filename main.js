@@ -133,6 +133,7 @@ function ask_modify_a_bus_questions(bus_id) {
         {
             name: 'attribute',
             type: 'list',
+            loop: false,
             message: 'Quel attribut voulez-vous modifier?',
             choices: [
                 {'name': `Numéro d\'identification (${bus.id})`, 'value': 'id'},
