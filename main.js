@@ -232,11 +232,10 @@ const ask_deleteBy_bus_id = async function(){
         }
 
 function ask_top_menu_questions() {
-    const choices = ['Créer une nouvelle agence'];
+    const choices = ['Créer une nouvelle agence', 'Quitter l\'application'];
     if (currentAgencies.length > 0) {
         // Only display this choice if there are agencies to be loaded.
         choices.push('Choisir une agence existante');
-        choices.push('Quitter l\'application');
     }
 
     const top_menu_questions = {
