@@ -244,6 +244,14 @@ function ask_top_menu_questions() {
             });
         } else if (choice === 'Créer une nouvelle agence') {
             inquirer.prompt(add_an_agency_questions).then((answers) => {
+                for (const agency of currentAgencies) {
+                    // We use .toUpperCase() to do a case-insensitive comparison.
+                    if (agency.shortName.toUpperCase() === answers.shortName.toUpperCase()) {
+                        // This agency already exists!
+                        console.log("Cette agence existe déjà.");
+                        return;
+                    }
+                }
                 // The variable 'answers' will contain a value for answers.name and answers.shortName, which is
                 // exactly what the constructor of Agency wants.
                 currentAgency = new Agency(answers);
