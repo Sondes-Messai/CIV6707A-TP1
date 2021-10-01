@@ -95,7 +95,7 @@ function ask_agency_questions() {
         if (choice === 'Ajouter un autobus') {
             ask_add_a_bus_questions();
         } else if (choice === 'Supprimer un autobus') {
-            ask_deleteBy_bus_question();
+            ask_delete_a_bus_questions();
         } else if (choice === 'Modifier un autobus') {
             const busChoices = [];
             for (const bus of currentAgency.busInventory) {
@@ -121,8 +121,28 @@ function ask_add_a_bus_questions() {
         const newBus = new Bus(choices);
         currentAgency.addBusToInventory(newBus);
         writeAgencyToDatabase(currentAgency);
-        console.log("L'autobus a été ajoutée");
-        ask_top_menu_questions();
+        console.log("L'autobus a été ajouté.");
+        ask_agency_questions();
+    });
+}
+
+function ask_delete_a_bus_questions() {
+    const busChoices = [];
+    for (const bus of currentAgency.busInventory) {
+        busChoices.push({'name': `Bus #${bus.id}: ${bus.license}, ${bus.make} ${bus.model}`, 'value': bus.id});
+    }
+
+    inquirer.prompt({
+        name: 'bus_id',
+        type: 'list',
+        message: 'Veuillez choisir l\'autobus à supprimer:',
+        choices: busChoices
+    }).then(({ bus_id }) => {
+        const busObject = currentAgency.getBusById(bus_id);
+        currentAgency.removeBusFromInventory(busObject);
+        writeAgencyToDatabase(currentAgency);
+        console.log("Le bus a été supprimé.\n");
+        ask_agency_questions();
     });
 }
 
