@@ -178,7 +178,7 @@ function ask_modify_a_bus_questions(bus_id) {
         });
     });
 }
-// fonction ask_deleteBy_bus_question() pour demander par quelle information l'usager souhaite supprimer le bus
+// fonction ask_delete_a_bus_questions() pour demander par quelle information l'usager souhaite supprimer le bus
 const ask_deleteBy_bus_question = async function()  {
     const choice = await inquirer.prompt(deleteBy_bus_question)
         .then(({choice}) => { //comment faire le .then sans la flèche si on n'a pas de fonction à mettre?
@@ -228,9 +228,6 @@ const ask_deleteBy_bus_id = async function(){
                 }
             } })
         }
-
-
-           
 
 function ask_top_menu_questions() {
     const choices = ['Créer une nouvelle agence'];
