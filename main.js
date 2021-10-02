@@ -31,17 +31,17 @@ const add_a_bus_questions = [
     {
         name: 'id',
         type: 'number',
-        message: 'Quel est le numéro l\'identifiant de l\'autobus (sans espaces ni charactères spéciaux)?'
+        message: 'Quel est le numéro l\'identifiant de l\'autobus (nombre, sans espaces ni charactères spéciaux)?'
     },
     {
         name: 'license',
         type: 'input',
-        message: 'Quel est le numéro de plaque d\'immatriculation de l\'autobus (sans espaces ni charactères spéciaux)?'
+        message: 'Quel est le numéro de plaque d\'immatriculation de l\'autobus (La lettre A suivi d\'un nombre, sans espaces ni charactères spéciaux)?'
     },
     {
         name: 'make',
         type: 'input',
-        message: 'Quel est le fabriquant de l\'autobus?'
+        message: 'Quel est le fabriquant de l\'autobus (doit contenir au moins une lettre)?'
     },
     {
         name: 'model',
@@ -51,12 +51,12 @@ const add_a_bus_questions = [
     {
         name: 'seatCount',
         type: 'number',
-        message: 'Combien y a-t-il de places assises?'
+        message: 'Combien y a-t-il de places assises (nombre) ?'
     },
     {
         name: 'standingCapacity',
         type: 'number',
-        message: 'Combien y a-t-il de places debout?'
+        message: 'Combien y a-t-il de places debout (nombre) ?'
     },
     {
         name: 'doorCount',
@@ -66,7 +66,7 @@ const add_a_bus_questions = [
     {
         name: 'accessCount',
         type: 'number',
-        message: 'Combien y a-t-il d\'accès?'
+        message: 'Combien y a-t-il d\'accès (il ne devrait pas y avoir plus d\'accès que de portes)?'
     },
 ];
 
@@ -75,7 +75,7 @@ const searchBy_bus_question = [
         name : 'choice',
         type : 'list',
         message:'Chercher l\'information de l\'autobus par :',
-        choices : ['numéro d\'identifiant', 'numéro de plaque d\'immatriculation', /*'fabriquant', 'moodèle', 'nombre de places assises', 'nombre de places debout', 'nombre de porte', 'nombre d\'accès'*/]
+        choices : ['numéro d\'identifiant', 'numéro de plaque d\'immatriculation']
     }
 ];
 const deleteBy_bus_question = [
@@ -83,7 +83,7 @@ const deleteBy_bus_question = [
         name : 'choice',
         type : 'list',
         message:'Supprimer un ou des autobus par :',
-        choices : ['numéro d\'identifiant', 'numéro de plaque d\'immatriculation' /*'fabriquant', 'moodèle', 'nombre de places assises', 'nombre de places debout', 'nombre de porte', 'nombre d\'accès'*/]
+        choices : ['numéro d\'identifiant', 'numéro de plaque d\'immatriculation']
     }
     
 ];
@@ -117,8 +117,34 @@ function ask_agency_questions() {
         }
     });
 }
-
+//code avec ajout d'un vérificateur - en cours de rédaction
 function ask_add_a_bus_questions() {
+    inquirer.prompt(add_a_bus_questions).then((choices) => {
+        if(
+            (isNaN(choices.id) === false) && 
+            ((choices.license.substring(0,1) === 'A' || choices.license.substring(0,1) === 'a') ===true ) && 
+            (isNaN(choices.license.substring(1)) === false) &&
+            (isNaN(choices.make) === true) &&
+            (isNaN(choices.seatCount) === false) && 
+            (isNaN(choices.standingCapacity) === false) && 
+            (choices.seatCount + choices.standingCapacity < 210) && // où un bus articulé peut avoir plus de 190 personnes
+            (choices.doorCount < 8) && //Ex. le rare bus MAN articulé version longue
+            ((choices.accessCount > choices.doorCount) === false)
+
+        )
+            {const newBus = new Bus(choices);
+            currentAgency.addBusToInventory(newBus);
+            writeAgencyToDatabase(currentAgency);
+            console.log("L'autobus a été ajoutée");
+            ask_top_menu_questions();}
+        else 
+            {console.log('Le format des données ne respecte pas les consignes, veuillez entrez les informations à nouveau');
+            ask_add_a_bus_questions();}
+    });
+}
+
+// Code original au cas où
+/*function ask_add_a_bus_questions() {
     inquirer.prompt(add_a_bus_questions).then((choices) => {
         const newBus = new Bus(choices);
         currentAgency.addBusToInventory(newBus);
@@ -126,7 +152,7 @@ function ask_add_a_bus_questions() {
         console.log("L'autobus a été ajoutée");
         ask_top_menu_questions();
     });
-}
+}*/
 
 function ask_modify_a_bus_questions(bus_id) {
     const bus = currentAgency.getBusById(bus_id);
