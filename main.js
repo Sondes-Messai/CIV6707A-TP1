@@ -116,6 +116,18 @@ function generate_list_of_bus_choices() {
     return busChoices;
 }
 
+// Afficher la liste des bus qui se trouve sur l'inventaire de l'agence
+
+require("inquirer-promise");
+ 
+inquirer.prompt([{type: "checkbox",
+                  name: "busInventory",
+                  message: "combien de bus sur l'inventaire de l'agence?",
+                  choices: ['bus.id', 'bus.license','bus.make','bus.model']   
+                 }]);
+  .then(results => console.log([busInventory, busInventory.lenght]);
+  
+
 function ask_add_a_bus_questions() {
     inquirer.prompt(add_a_bus_questions).then((choices) => {
         const newBus = new Bus(choices);
