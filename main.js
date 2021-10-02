@@ -78,6 +78,7 @@ const searchBy_bus_question = [
         choices : ['numéro d\'identifiant', 'numéro de plaque d\'immatriculation']
     }
 ];
+<<<<<<< HEAD
 const deleteBy_bus_question = [
     {
         name : 'choice',
@@ -87,6 +88,8 @@ const deleteBy_bus_question = [
     }
     
 ];
+=======
+>>>>>>> 89d66ba8ad84f675660a34d035f41721631b40ab
 
 var currentAgency = null;
 
@@ -95,12 +98,9 @@ function ask_agency_questions() {
         if (choice === 'Ajouter un autobus') {
             ask_add_a_bus_questions();
         } else if (choice === 'Supprimer un autobus') {
-            ask_deleteBy_bus_question();
+            ask_delete_a_bus_questions();
         } else if (choice === 'Modifier un autobus') {
-            const busChoices = [];
-            for (const bus of currentAgency.busInventory) {
-                busChoices.push({'name': `Bus #${bus.id}: ${bus.license}, ${bus.make} ${bus.model}`, 'value': bus.id});
-            }
+            const busChoices = generate_list_of_bus_choices();
 
             inquirer.prompt({
                 name: 'bus_id',
@@ -117,7 +117,33 @@ function ask_agency_questions() {
         }
     });
 }
+<<<<<<< HEAD
 //code avec ajout d'un vérificateur - en cours de rédaction
+=======
+
+function generate_list_of_bus_choices() {
+    const busChoices = [];
+    
+    for (const bus of currentAgency.busInventory) {
+        busChoices.push({'name': `Bus #${bus.id}: ${bus.license}, ${bus.make} ${bus.model}`, 'value': bus.id});
+    }
+
+    return busChoices;
+}
+
+// Afficher la liste des bus qui se trouve sur l'inventaire de l'agence
+
+require("inquirer-promise");
+ 
+inquirer.prompt([{type: "checkbox",
+                  name: "busInventory",
+                  message: "combien de bus sur l'inventaire de l'agence?",
+                  choices: ['bus.id', 'bus.license','bus.make','bus.model']   
+                 }]);
+  .then(results => console.log([busInventory, busInventory.lenght]);
+  
+
+>>>>>>> 89d66ba8ad84f675660a34d035f41721631b40ab
 function ask_add_a_bus_questions() {
     inquirer.prompt(add_a_bus_questions).then((choices) => {
         if(
@@ -149,8 +175,24 @@ function ask_add_a_bus_questions() {
         const newBus = new Bus(choices);
         currentAgency.addBusToInventory(newBus);
         writeAgencyToDatabase(currentAgency);
-        console.log("L'autobus a été ajoutée");
-        ask_top_menu_questions();
+        console.log("L'autobus a été ajouté.\n");
+        ask_agency_questions();
+    });
+}
+
+function ask_delete_a_bus_questions() {
+    busChoices = generate_list_of_bus_choices();
+    inquirer.prompt({
+        name: 'bus_id',
+        type: 'list',
+        message: 'Veuillez choisir l\'autobus à supprimer:',
+        choices: busChoices
+    }).then(({ bus_id }) => {
+        const busObject = currentAgency.getBusById(bus_id);
+        currentAgency.removeBusFromInventory(busObject);
+        writeAgencyToDatabase(currentAgency);
+        console.log("Le bus a été supprimé.\n");
+        ask_agency_questions();
     });
 }*/
 
@@ -176,7 +218,6 @@ function ask_modify_a_bus_questions(bus_id) {
         }
     ];
 
-
     inquirer.prompt(modify_a_bus_questions).then(({ attribute }) => {
         inquirer.prompt({'message': "Quelle est la nouvelle valeur?", 'name': 'new_value'}).then(({ new_value }) => {
             bus[attribute] = new_value;
@@ -186,17 +227,7 @@ function ask_modify_a_bus_questions(bus_id) {
         });
     });
 }
-// fonction ask_deleteBy_bus_question() pour demander par quelle information l'usager souhaite supprimer le bus
-const ask_deleteBy_bus_question = async function()  {
-    const choice = await inquirer.prompt(deleteBy_bus_question)
-        .then(({choice}) => { //comment faire le .then sans la flèche si on n'a pas de fonction à mettre?
-            if (choice ==='numéro d\'identifiant') {
-             ask_deleteBy_bus_id();
-            }
-            else {ask_searchBy_bus_license();
-            }
-        } ) 
-}
+
 // fonction ask_searchBy_bus_question() pour demander par quelle information l'usager souhaite chercher le bus en format async function partie 1/2
 const ask_searchBy_bus_question = async function()  {
     const choice = await inquirer.prompt(searchBy_bus_question)
@@ -225,27 +256,12 @@ const ask_searchBy_bus_license = async function (){
             console.log(searchResult)
             ask_top_menu_questions();
             } )}
-// supprimer un bus incomplet, ne fonctionne pas
-const ask_deleteBy_bus_id = async function(){
-    const deleteId = await inquirer.prompt({name : 'deleteId', message : 'Entrez l\'identifiant du bus à supprimer', type : 'number'})
-        .then (({deleteId})=> {
-            for (let i = 0; i < currentAgency.busInventory.length; i++){
-                if (currentAgency.busInventory[i].id === deleteId) {
-                    currentAgency.busInventory.splice(i, 1);
-                    i--;
-                }
-            } })
-        }
-
-
-           
 
 function ask_top_menu_questions() {
-    const choices = ['Créer une nouvelle agence'];
+    const choices = ['Créer une nouvelle agence', 'Quitter l\'application'];
     if (currentAgencies.length > 0) {
         // Only display this choice if there are agencies to be loaded.
         choices.push('Choisir une agence existante');
-        choices.push('Quitter l\'application');
     }
 
     const top_menu_questions = {
