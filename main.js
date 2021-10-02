@@ -10,7 +10,7 @@ const agency_questions = [
         name: 'choice',
         type: 'list',
         message: 'Que voulez-vous faire? (utilisez les flèches et la touche « retour » pour sélectionner):',
-        choices: ['Ajouter un autobus', 'Supprimer un autobus', 'Modifier un autobus', 'Faire une recherche', 'Quitter l\'application'],
+        choices: ['Ajouter un autobus', 'Supprimer un autobus', 'Modifier un autobus', 'Faire une recherche', 'Montrer l\'inventaire d\'autobus', 'Quitter l\'application'],
     }
 ];
 
@@ -78,18 +78,6 @@ const searchBy_bus_question = [
         choices : ['numéro d\'identifiant', 'numéro de plaque d\'immatriculation']
     }
 ];
-<<<<<<< HEAD
-const deleteBy_bus_question = [
-    {
-        name : 'choice',
-        type : 'list',
-        message:'Supprimer un ou des autobus par :',
-        choices : ['numéro d\'identifiant', 'numéro de plaque d\'immatriculation']
-    }
-    
-];
-=======
->>>>>>> 89d66ba8ad84f675660a34d035f41721631b40ab
 
 var currentAgency = null;
 
@@ -112,14 +100,13 @@ function ask_agency_questions() {
             });
         } else if (choice == 'Faire une recherche') {
             ask_searchBy_bus_question();
+        }else if (choice === 'Montrer l\'inventaire d\'autobus') {
+            show_busInvetory();
         } else if (choice == 'Quitter l\'application') {
             process.exit()
         }
     });
 }
-<<<<<<< HEAD
-//code avec ajout d'un vérificateur - en cours de rédaction
-=======
 
 function generate_list_of_bus_choices() {
     const busChoices = [];
@@ -133,17 +120,17 @@ function generate_list_of_bus_choices() {
 
 // Afficher la liste des bus qui se trouve sur l'inventaire de l'agence
 
-require("inquirer-promise");
+//require("inquirer-promise");
  
+const show_busInvetory = function () {
 inquirer.prompt([{type: "checkbox",
                   name: "busInventory",
                   message: "combien de bus sur l'inventaire de l'agence?",
                   choices: ['bus.id', 'bus.license','bus.make','bus.model']   
-                 }]);
-  .then(results => console.log([busInventory, busInventory.lenght]);
+                 }])
+  .then(results => console.log([busInventory, busInventory.lenght]))};
   
 
->>>>>>> 89d66ba8ad84f675660a34d035f41721631b40ab
 function ask_add_a_bus_questions() {
     inquirer.prompt(add_a_bus_questions).then((choices) => {
         if(
