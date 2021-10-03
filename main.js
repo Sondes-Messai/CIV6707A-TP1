@@ -334,6 +334,12 @@ async function ask_top_menu_questions() {
     } else if (result.choice === 'Créer une nouvelle agence') {
         const answers = await inquirer.prompt(add_an_agency_questions);
 
+        if (answers.shortName === '' ||
+            answers.name === '') {
+                console.log("Valeurs invalides!");
+                return;
+        }
+
         for (const agency of currentAgencies) {
             // We use .toUpperCase() to do a case-insensitive comparison.
             if (agency.shortName.toUpperCase() === answers.shortName.toUpperCase()) {
