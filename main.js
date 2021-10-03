@@ -105,6 +105,12 @@ async function ask_agency_questions() {
     } else if (result.choice == 'Faire une recherche') {
         ask_searchBy_bus_question();
     } else if (result.choice === 'Montrer l\'inventaire d\'autobus') {
+        if (currentAgency.busInventory.length == 0) {
+            console.log("Il n'y a aucun autobus dans l'inventaire.");
+            ask_agency_questions();
+            return;
+        }
+
         show_bus_inventory();
     } else if (result.choice == 'Quitter l\'application') {
         process.exit()
