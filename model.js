@@ -34,7 +34,7 @@ class Agency {
 
   addBusToInventory(bus) {
     if (this.getBusById(bus.id) != undefined) {
-      throw "this bus is already in the agency's inventory";
+      throw "A bus with same ID already exists in the agency's inventory.";
     } else {
       this.busInventory.push(bus);
     }

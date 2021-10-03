@@ -178,15 +178,22 @@ function ask_add_a_bus_questions() {
             (choices.seatCount + choices.standingCapacity < 210) && // où un bus articulé peut avoir plus de 190 personnes
             (choices.doorCount < 8) && //Ex. le rare bus MAN articulé version longue
             ((choices.accessCount > choices.doorCount) === false)
-        )
-            {const newBus = new Bus(choices);
-            currentAgency.addBusToInventory(newBus);
+        ) {
+            const newBus = new Bus(choices);
+            try {
+                currentAgency.addBusToInventory(newBus);
+            } catch (error) { // A bus with this ID probably already exists.
+                console.log(error);
+                ask_add_a_bus_questions();
+                return;
+            }
             writeAgencyToDatabase(currentAgency);
             console.log("L'autobus a été ajoutée");
-            ask_top_menu_questions();}
-        else 
-            {console.log('Le format des données ne respecte pas les consignes, veuillez entrez les informations à nouveau');
-            ask_add_a_bus_questions();}
+            ask_top_menu_questions();
+        } else {
+            console.log('Le format des données ne respecte pas les consignes, veuillez entrez les informations à nouveau');
+            ask_add_a_bus_questions();
+        }
     });
 }
 
