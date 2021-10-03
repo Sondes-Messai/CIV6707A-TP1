@@ -10,7 +10,7 @@ const agency_questions = [
         name: 'choice',
         type: 'list',
         message: 'Que voulez-vous faire? (utilisez les flèches et la touche « retour » pour sélectionner):',
-        choices: ['Ajouter un autobus', 'Supprimer un autobus', 'Modifier un autobus', 'Faire une recherche', 'Montrer l\'inventaire d\'autobus', 'Quitter l\'application'],
+        choices: ['Ajouter un autobus', 'Supprimer un autobus', 'Modifier un autobus', 'Montrer l\'inventaire d\'autobus', 'Faire une recherche', 'Quitter l\'application'],
     }
 ];
 
@@ -118,18 +118,50 @@ function generate_list_of_bus_choices() {
     return busChoices;
 }
 
-// Afficher la liste des bus qui se trouve sur l'inventaire de l'agence
+function show_busInvetory(sortBy = 'id') {
+    const inventory = currentAgency.busInventory.slice();
+    inventory.sort(function(a, b) {
+        return a[sortBy].toString().localeCompare(b[sortBy])
+    });
 
-//require("inquirer-promise");
- 
-const show_busInvetory = function () {
-inquirer.prompt([{type: "checkbox",
-                  name: "busInventory",
-                  message: "Veuillez choisir une agence",
-                  choices: ['numéro l\'identifiant de l\'autobus', 'numéro de plaque d\'immatriculation de l\'autobus','le fabriquant de l\'autobus','model de l\'autobus']   
-                 }])
-  .then(results => console.log([busInventory, busInventory.lenght]))};
-  
+    for (const bus of inventory) {
+        console.log(`Bus #${bus.id}`);
+        console.log(`Numéro d'immatriculation #${bus.license}`);
+        console.log(`${bus.make}`);
+        console.log(`Modèle ${bus.model}`);
+        console.log(`${bus.seatCount} places assises`);
+        console.log(`${bus.standingCapacity} places debout`);
+        console.log(`${bus.doorCount} portes`);
+        console.log(`${bus.accessCount} voies d'accès`);
+        console.log('');
+    }
+
+    inquirer.prompt([
+        {
+            name: 'choice',
+            type: 'list',
+            loop: false,
+            message: 'Que voulez-vous faire?',
+            choices: [
+                {'name': `Trier par numéro d'identification`, 'value': 'id'},
+                {'name': `Trier par numéro d'immatriculation`, 'value': 'license'},
+                {'name': `Trier par fabriquant`, 'value': 'make'},
+                {'name': `Trier par modèle`, 'value': 'model'},
+                {'name': `Trier par nombre de places assises`, 'value': 'seatCount'},
+                {'name': `Trier par nombre de places debout`, 'value': 'standingCapacity'},
+                {'name': `Trier par nombre de portes`, 'value': 'doorCount'},
+                {'name': `Trier par nombre de voies d'accès`, 'value': 'accessCount'},
+                {'name': `Retourner au menu principal`, 'value': 'mainMenu'}
+            ],
+        }
+    ]).then(({ choice }) => {
+        if (choice === 'mainMenu') {
+            ask_top_menu_questions();
+        } else {
+            show_busInvetory(choice);
+        }
+    });
+}
 
 function ask_add_a_bus_questions() {
     inquirer.prompt(add_a_bus_questions).then((choices) => {
