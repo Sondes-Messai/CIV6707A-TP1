@@ -1,4 +1,4 @@
-//Interface utilisateur pour ajouter un autobus, supprimer un autobus, faire une recherche
+//Interface utilisateur pour ajouter un autobus, supprimer un autobus, effectuer une recherche
 
 import inquirer from 'inquirer';
 
@@ -10,7 +10,7 @@ const agency_questions = [
         name: 'choice',
         type: 'list',
         message: 'Que voulez-vous faire? (utilisez les flèches et la touche « retour » pour sélectionner):',
-        choices: ['Ajouter un autobus', 'Supprimer un autobus', 'Modifier un autobus', 'Montrer l\'inventaire d\'autobus', 'Faire une recherche', 'Quitter l\'application'],
+        choices: ['Ajouter un autobus', 'Supprimer un autobus', 'Modifier un autobus', 'Montrer l\'inventaire d\'autobus', 'Effectuer une recherche', 'Quitter l\'application'],
     }
 ];
 
@@ -70,12 +70,12 @@ const add_a_bus_questions = [
     },
 ];
 
-const searchBy_bus_question = [
+const search_bus_question = [
     {
         name : 'choice',
         type : 'list',
         message:'Chercher l\'information de l\'autobus par :',
-        choices : ['numéro d\'identifiant', 'numéro de plaque d\'immatriculation']
+        choices : ['Numéro d\'identifiant', 'Numéro de plaque d\'immatriculation']
     }
 ];
 
@@ -86,7 +86,7 @@ async function ask_agency_questions() {
 
     if (result.choice === 'Ajouter un autobus' || 
         result.choice === 'Supprimer un autobus' || 
-        result.choice === 'Faire une recherche' || 
+        result.choice === 'Effectuer une recherche' || 
         result.choice === 'Montrer l\'inventaire d\'autobus') {
         if (currentAgency.busInventory.length == 0) {
             console.log("Il n'y a aucun autobus dans l'inventaire. Ce choix est invalide.");
@@ -108,8 +108,8 @@ async function ask_agency_questions() {
             choices: busChoices
         })
         ask_modify_a_bus_questions(result.bus_id);
-    } else if (result.choice == 'Faire une recherche') {
-        ask_searchBy_bus_question();
+    } else if (result.choice == 'Effectuer une recherche') {
+        ask_search_bus_question();
     } else if (result.choice === 'Montrer l\'inventaire d\'autobus') {
         show_bus_inventory();
     } else if (result.choice == 'Quitter l\'application') {
@@ -127,6 +127,18 @@ function generate_list_of_bus_choices() {
     return busChoices;
 }
 
+function displayBus(bus) {
+    console.log(`Bus #${bus.id}`);
+    console.log(`Numéro d'immatriculation #${bus.license}`);
+    console.log(`${bus.make}`);
+    console.log(`Modèle ${bus.model}`);
+    console.log(`${bus.seatCount} places assises`);
+    console.log(`${bus.standingCapacity} places debout`);
+    console.log(`${bus.doorCount} portes`);
+    console.log(`${bus.accessCount} voies d'accès`);
+    console.log('');
+}
+
 async function show_bus_inventory(sortBy = 'id') {
     // Par défault on veut trier selon le numéro d'identification
 
@@ -137,15 +149,7 @@ async function show_bus_inventory(sortBy = 'id') {
     });
 
     for (const bus of inventory) {
-        console.log(`Bus #${bus.id}`);
-        console.log(`Numéro d'immatriculation #${bus.license}`);
-        console.log(`${bus.make}`);
-        console.log(`Modèle ${bus.model}`);
-        console.log(`${bus.seatCount} places assises`);
-        console.log(`${bus.standingCapacity} places debout`);
-        console.log(`${bus.doorCount} portes`);
-        console.log(`${bus.accessCount} voies d'accès`);
-        console.log('');
+        displayBus(bus);
     }
 
     const result = await inquirer.prompt([
@@ -260,34 +264,28 @@ async function ask_modify_a_bus_questions(bus_id) {
     ask_agency_questions();
 }
 
-// fonction ask_searchBy_bus_question() pour demander par quelle information l'usager souhaite chercher le bus en format async function partie 1/2
-const ask_searchBy_bus_question = async function()  {
-    const choice = await inquirer.prompt(searchBy_bus_question)
-        .then(({choice}) => { //comment faire le .then sans la flèche si on n'a pas de fonction à mettre?
-            if (choice ==='numéro d\'identifiant') {
-             ask_searchBy_bus_id();
-            }
-            else {ask_searchBy_bus_license();
-            }
-        } ) 
-}
-//chercher un bus par identifiant partie 2/2 A:
-const ask_searchBy_bus_id = async function(){
-    const searchedId = await inquirer.prompt({name :'searchedId', message : 'Entrez le numéro d\'identifiant', type : 'number'})
-        .then(({searchedId}) => {
-            let searchResult = currentAgency.busInventory.filter((autobus) => autobus.id === searchedId);
-            console.log(searchResult)
-            ask_top_menu_questions();
-            } )}
+async function ask_search_bus_question() {
+    const result = await inquirer.prompt(search_bus_question);
+    let searchResults = null;
 
-//chercher un bus par plaque d'immatriculation partie 2/2 B:
-const ask_searchBy_bus_license = async function (){
-    const searchedLiscence = await inquirer.prompt({name :'searchedLicense', message : 'Entrez la plaque d\'immatriculation', type : 'input'})
-        .then(({searchedLicense}) => {
-            let searchResult = currentAgency.busInventory.filter((autobus) => autobus.license === searchedLicense);
-            console.log(searchResult)
-            ask_top_menu_questions();
-            } )}
+    if (result.choice === 'Numéro d\'identifiant') {
+        const output = await inquirer.prompt({name: 'search_id', message: 'Entrez le numéro d\'identifiant:', type: 'number'})
+        searchResults = currentAgency.busInventory.filter((bus) => bus.id === output.search_id);
+    } else {
+        const output = await inquirer.prompt({name: 'search_license', message: 'Entrez le numéro de plaque d\'immatriculation:'})
+        searchResults = currentAgency.busInventory.filter((bus) => bus.license === output.search_license);
+    }
+
+    if (searchResults.length >= 1) {
+        for (const bus of searchResults) {
+            displayBus(bus);
+        }
+    } else {
+        console.log("Aucun résultat.\n");
+    }
+    
+    ask_agency_questions();
+}
 
 async function ask_top_menu_questions() {
     const choices = ['Créer une nouvelle agence'];
