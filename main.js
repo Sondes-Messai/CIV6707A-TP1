@@ -101,7 +101,7 @@ function ask_agency_questions() {
         } else if (choice == 'Faire une recherche') {
             ask_searchBy_bus_question();
         } else if (choice === 'Montrer l\'inventaire d\'autobus') {
-            show_busInvetory();
+            show_bus_inventory();
         } else if (choice == 'Quitter l\'application') {
             process.exit()
         }
@@ -118,7 +118,10 @@ function generate_list_of_bus_choices() {
     return busChoices;
 }
 
-function show_busInvetory(sortBy = 'id') {
+function show_bus_inventory(sortBy = 'id') {
+    // Par défault on veut trier selon le numéro d'identification
+
+    // Ce code permet de trier la liste d'autobus selon un attribut spécifique.
     const inventory = currentAgency.busInventory.slice();
     inventory.sort(function(a, b) {
         return a[sortBy].toString().localeCompare(b[sortBy])
@@ -158,7 +161,7 @@ function show_busInvetory(sortBy = 'id') {
         if (choice === 'mainMenu') {
             ask_top_menu_questions();
         } else {
-            show_busInvetory(choice);
+            show_bus_inventory(choice);
         }
     });
 }
