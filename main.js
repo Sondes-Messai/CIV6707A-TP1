@@ -125,8 +125,8 @@ function generate_list_of_bus_choices() {
 const show_busInvetory = function () {
 inquirer.prompt([{type: "checkbox",
                   name: "busInventory",
-                  message: "combien de bus sur l'inventaire de l'agence?",
-                  choices: ['bus.id', 'bus.license','bus.make','bus.model']   
+                  message: "Veuillez choisir une agence",
+                  choices: ['numéro l\'identifiant de l\'autobus', 'numéro de plaque d\'immatriculation de l\'autobus','le fabriquant de l\'autobus','model de l\'autobus']   
                  }])
   .then(results => console.log([busInventory, busInventory.lenght]))};
   
