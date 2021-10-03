@@ -235,11 +235,12 @@ const ask_searchBy_bus_license = async function (){
             } )}
 
 function ask_top_menu_questions() {
-    const choices = ['Créer une nouvelle agence', 'Quitter l\'application'];
+    const choices = ['Créer une nouvelle agence'];
     if (currentAgencies.length > 0) {
         // Only display this choice if there are agencies to be loaded.
         choices.push('Choisir une agence existante');
     }
+    choices.push('Quitter l\'application');
 
     const top_menu_questions = {
             name: 'choice',
