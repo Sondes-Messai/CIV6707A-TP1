@@ -83,17 +83,23 @@ var currentAgency = null;
 
 async function ask_agency_questions() {
     const result = await inquirer.prompt(agency_questions);
+
+    if (result.choice === 'Ajouter un autobus' || 
+        result.choice === 'Supprimer un autobus' || 
+        result.choice === 'Faire une recherche' || 
+        result.choice === 'Montrer l\'inventaire d\'autobus') {
+        if (currentAgency.busInventory.length == 0) {
+            console.log("Il n'y a aucun autobus dans l'inventaire. Ce choix est invalide.");
+            ask_agency_questions();
+            return;
+        }
+    }
+
     if (result.choice === 'Ajouter un autobus') {
         ask_add_a_bus_questions();
     } else if (result.choice === 'Supprimer un autobus') {
         ask_delete_a_bus_questions();
     } else if (result.choice === 'Modifier un autobus') {
-        if (currentAgency.busInventory.length == 0) {
-            console.log("Il n'y a aucun autobus à modifier.");
-            ask_agency_questions();
-            return;
-        }
-
         const busChoices = generate_list_of_bus_choices();
         const result = await inquirer.prompt({
             name: 'bus_id',
@@ -105,12 +111,6 @@ async function ask_agency_questions() {
     } else if (result.choice == 'Faire une recherche') {
         ask_searchBy_bus_question();
     } else if (result.choice === 'Montrer l\'inventaire d\'autobus') {
-        if (currentAgency.busInventory.length == 0) {
-            console.log("Il n'y a aucun autobus dans l'inventaire.");
-            ask_agency_questions();
-            return;
-        }
-
         show_bus_inventory();
     } else if (result.choice == 'Quitter l\'application') {
         process.exit()
