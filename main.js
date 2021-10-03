@@ -139,42 +139,55 @@ function displayBus(bus) {
     console.log('');
 }
 
-async function show_bus_inventory(sortBy = 'id') {
+async function show_bus_inventory() {
     // Par défault on veut trier selon le numéro d'identification
+    // et on affiche les résultats en ordre croissant.
+    let ascendingOrder = true;
+    let sortBy = 'id';
+    while (true) {
+        // Ce code permet de trier la liste d'autobus selon un attribut spécifique.
+        let inventory = currentAgency.busInventory.slice();
+        inventory.sort(function(a, b) {
+            return a[sortBy].toString().localeCompare(b[sortBy])
+        });
 
-    // Ce code permet de trier la liste d'autobus selon un attribut spécifique.
-    const inventory = currentAgency.busInventory.slice();
-    inventory.sort(function(a, b) {
-        return a[sortBy].toString().localeCompare(b[sortBy])
-    });
-
-    for (const bus of inventory) {
-        displayBus(bus);
-    }
-
-    const result = await inquirer.prompt([
-        {
-            name: 'choice',
-            type: 'list',
-            loop: false,
-            message: 'Que voulez-vous faire?',
-            choices: [
-                {'name': `Trier par numéro d'identification`, 'value': 'id'},
-                {'name': `Trier par numéro d'immatriculation`, 'value': 'license'},
-                {'name': `Trier par fabriquant`, 'value': 'make'},
-                {'name': `Trier par modèle`, 'value': 'model'},
-                {'name': `Trier par nombre de places assises`, 'value': 'seatCount'},
-                {'name': `Trier par nombre de places debout`, 'value': 'standingCapacity'},
-                {'name': `Trier par nombre de portes`, 'value': 'doorCount'},
-                {'name': `Trier par nombre de voies d'accès`, 'value': 'accessCount'},
-                {'name': `Retourner au menu précédent`, 'value': 'menu'}
-            ],
+        if (!ascendingOrder) {
+            inventory = inventory.reverse();
         }
-    ])
-    if (result.choice === 'menu') {
-        ask_agency_questions();
-    } else {
-        show_bus_inventory(result.choice);
+
+        for (const bus of inventory) {
+            displayBus(bus);
+        }
+
+        const result = await inquirer.prompt([
+            {
+                name: 'choice',
+                type: 'list',
+                loop: false,
+                message: 'Que voulez-vous faire?',
+                choices: [
+                    {'name': `Trier par numéro d'identification`, 'value': 'id'},
+                    {'name': `Trier par numéro d'immatriculation`, 'value': 'license'},
+                    {'name': `Trier par fabriquant`, 'value': 'make'},
+                    {'name': `Trier par modèle`, 'value': 'model'},
+                    {'name': `Trier par nombre de places assises`, 'value': 'seatCount'},
+                    {'name': `Trier par nombre de places debout`, 'value': 'standingCapacity'},
+                    {'name': `Trier par nombre de portes`, 'value': 'doorCount'},
+                    {'name': `Trier par nombre de voies d'accès`, 'value': 'accessCount'},
+                    {'name': `Inverser l'ordre de présentation`, 'value': 'invertOrder'},
+                    {'name': `Retourner au menu précédent`, 'value': 'menu'}
+                ],
+            }
+        ])
+        if (result.choice === 'menu') {
+            ask_agency_questions();
+            return;
+        } else if (result.choice === 'invertOrder') {
+            ascendingOrder = !ascendingOrder;
+        } else {
+            sortBy = result.choice;
+            show_bus_inventory(result.choice);
+        }
     }
 }
 
