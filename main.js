@@ -308,7 +308,7 @@ async function ask_top_menu_questions() {
     if (result.choice === 'Choisir une agence existante') {
         const agencyChoices = [];
         for (const agency of currentAgencies) {
-            agencyChoices.push(agency.shortName);
+            agencyChoices.push({'name': `${agency.name} (${agency.shortName})`, 'value': `${agency.shortName}`});
         }
 
         const result = await inquirer.prompt({
