@@ -100,7 +100,7 @@ function ask_agency_questions() {
             });
         } else if (choice == 'Faire une recherche') {
             ask_searchBy_bus_question();
-        }else if (choice === 'Montrer l\'inventaire d\'autobus') {
+        } else if (choice === 'Montrer l\'inventaire d\'autobus') {
             show_busInvetory();
         } else if (choice == 'Quitter l\'application') {
             process.exit()
@@ -143,7 +143,6 @@ function ask_add_a_bus_questions() {
             (choices.seatCount + choices.standingCapacity < 210) && // où un bus articulé peut avoir plus de 190 personnes
             (choices.doorCount < 8) && //Ex. le rare bus MAN articulé version longue
             ((choices.accessCount > choices.doorCount) === false)
-
         )
             {const newBus = new Bus(choices);
             currentAgency.addBusToInventory(newBus);
@@ -156,16 +155,7 @@ function ask_add_a_bus_questions() {
     });
 }
 
-// Code original au cas où
-/*function ask_add_a_bus_questions() {
-    inquirer.prompt(add_a_bus_questions).then((choices) => {
-        const newBus = new Bus(choices);
-        currentAgency.addBusToInventory(newBus);
-        writeAgencyToDatabase(currentAgency);
-        console.log("L'autobus a été ajouté.\n");
-        ask_agency_questions();
-    });
-}
+
 
 function ask_delete_a_bus_questions() {
     busChoices = generate_list_of_bus_choices();
@@ -181,7 +171,7 @@ function ask_delete_a_bus_questions() {
         console.log("Le bus a été supprimé.\n");
         ask_agency_questions();
     });
-}*/
+}
 
 function ask_modify_a_bus_questions(bus_id) {
     const bus = currentAgency.getBusById(bus_id);
@@ -226,7 +216,7 @@ const ask_searchBy_bus_question = async function()  {
             }
         } ) 
 }
-//chercher un bus par identifiant partie 2/2 
+//chercher un bus par identifiant partie 2/2 A:
 const ask_searchBy_bus_id = async function(){
     const searchedId = await inquirer.prompt({name :'searchedId', message : 'Entrez le numéro d\'identifiant', type : 'number'})
         .then(({searchedId}) => {
@@ -235,7 +225,7 @@ const ask_searchBy_bus_id = async function(){
             ask_top_menu_questions();
             } )}
 
-//chercher un bus par plaque d'immatriculation partie 2/2:
+//chercher un bus par plaque d'immatriculation partie 2/2 B:
 const ask_searchBy_bus_license = async function (){
     const searchedLiscence = await inquirer.prompt({name :'searchedLicense', message : 'Entrez la plaque d\'immatriculation', type : 'input'})
         .then(({searchedLicense}) => {
