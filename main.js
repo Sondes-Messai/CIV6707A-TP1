@@ -260,7 +260,7 @@ async function ask_modify_a_bus_questions(bus_id) {
                 {'name': `Fabriquant (${bus.make})`, 'value': 'make'},
                 {'name': `Modèle (${bus.model})`, 'value': 'model'},
                 {'name': `Nombre de places assises (${bus.seatCount})`, 'value': 'seatCount'},
-                {'name': `Nombre de places debout (${bus.standingCount})`, 'value': 'standingCapacity'},
+                {'name': `Nombre de places debout (${bus.standingCapacity})`, 'value': 'standingCapacity'},
                 {'name': `Nombre de portes (${bus.doorCount})`, 'value': 'doorCount'},
                 {'name': `Nombres de voies d'accès (${bus.accessCount})`, 'value': 'accessCount'}
             ]
