@@ -13,4 +13,4 @@ Membres de l'équipe:
 
 # Utilisation
 
-Les instructions d'utilisation sont disponibles sur le [wiki](https://github.com/davidmurray/CIV6707A-TP1/wiki).
+Les instructions d'utilisation sont disponibles sur le [wiki](https://github.com/davidmurray/CIV6707A-TP1/wiki/Instructions-d'utilisation).
