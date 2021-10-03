@@ -81,31 +81,34 @@ const searchBy_bus_question = [
 
 var currentAgency = null;
 
-function ask_agency_questions() {
-    inquirer.prompt(agency_questions).then(({ choice }) => {
-        if (choice === 'Ajouter un autobus') {
-            ask_add_a_bus_questions();
-        } else if (choice === 'Supprimer un autobus') {
-            ask_delete_a_bus_questions();
-        } else if (choice === 'Modifier un autobus') {
-            const busChoices = generate_list_of_bus_choices();
-
-            inquirer.prompt({
-                name: 'bus_id',
-                type: 'list',
-                message: 'Veuillez choisir l\'autobus à modifier:',
-                choices: busChoices
-            }).then(({ bus_id }) => {
-                ask_modify_a_bus_questions(bus_id);
-            });
-        } else if (choice == 'Faire une recherche') {
-            ask_searchBy_bus_question();
-        } else if (choice === 'Montrer l\'inventaire d\'autobus') {
-            show_bus_inventory();
-        } else if (choice == 'Quitter l\'application') {
-            process.exit()
+async function ask_agency_questions() {
+    const result = await inquirer.prompt(agency_questions);
+    if (result.choice === 'Ajouter un autobus') {
+        ask_add_a_bus_questions();
+    } else if (result.choice === 'Supprimer un autobus') {
+        ask_delete_a_bus_questions();
+    } else if (result.choice === 'Modifier un autobus') {
+        if (currentAgency.busInventory.length == 0) {
+            console.log("Il n'y a aucun autobus à modifier.");
+            ask_agency_questions();
+            return;
         }
-    });
+
+        const busChoices = generate_list_of_bus_choices();
+        const result = await inquirer.prompt({
+            name: 'bus_id',
+            type: 'list',
+            message: 'Veuillez choisir l\'autobus à modifier:',
+            choices: busChoices
+        })
+        ask_modify_a_bus_questions(result.bus_id);
+    } else if (result.choice == 'Faire une recherche') {
+        ask_searchBy_bus_question();
+    } else if (result.choice === 'Montrer l\'inventaire d\'autobus') {
+        show_bus_inventory();
+    } else if (result.choice == 'Quitter l\'application') {
+        process.exit()
+    }
 }
 
 function generate_list_of_bus_choices() {
@@ -118,7 +121,7 @@ function generate_list_of_bus_choices() {
     return busChoices;
 }
 
-function show_bus_inventory(sortBy = 'id') {
+async function show_bus_inventory(sortBy = 'id') {
     // Par défault on veut trier selon le numéro d'identification
 
     // Ce code permet de trier la liste d'autobus selon un attribut spécifique.
@@ -139,7 +142,7 @@ function show_bus_inventory(sortBy = 'id') {
         console.log('');
     }
 
-    inquirer.prompt([
+    const result = await inquirer.prompt([
         {
             name: 'choice',
             type: 'list',
@@ -154,68 +157,72 @@ function show_bus_inventory(sortBy = 'id') {
                 {'name': `Trier par nombre de places debout`, 'value': 'standingCapacity'},
                 {'name': `Trier par nombre de portes`, 'value': 'doorCount'},
                 {'name': `Trier par nombre de voies d'accès`, 'value': 'accessCount'},
-                {'name': `Retourner au menu principal`, 'value': 'mainMenu'}
+                {'name': `Retourner au menu précédent`, 'value': 'menu'}
             ],
         }
-    ]).then(({ choice }) => {
-        if (choice === 'mainMenu') {
-            ask_top_menu_questions();
-        } else {
-            show_bus_inventory(choice);
-        }
-    });
+    ])
+    if (result.choice === 'menu') {
+        ask_agency_questions();
+    } else {
+        show_bus_inventory(result.choice);
+    }
 }
 
-function ask_add_a_bus_questions() {
-    inquirer.prompt(add_a_bus_questions).then((choices) => {
-        if(
-            (isNaN(choices.id) === false) && 
-            ((choices.license.substring(0,1) === 'A' || choices.license.substring(0,1) === 'a') ===true ) && 
-            (isNaN(choices.license.substring(1)) === false) &&
-            (isNaN(choices.make) === true) &&
-            (isNaN(choices.seatCount) === false) && 
-            (isNaN(choices.standingCapacity) === false) && 
-            (choices.seatCount + choices.standingCapacity < 210) && // où un bus articulé peut avoir plus de 190 personnes
-            (choices.doorCount < 8) && //Ex. le rare bus MAN articulé version longue
-            ((choices.accessCount > choices.doorCount) === false)
-        ) {
-            const newBus = new Bus(choices);
-            try {
-                currentAgency.addBusToInventory(newBus);
-            } catch (error) { // A bus with this ID probably already exists.
-                console.log(error);
-                ask_add_a_bus_questions();
-                return;
-            }
-            writeAgencyToDatabase(currentAgency);
-            console.log("L'autobus a été ajoutée");
-            ask_top_menu_questions();
-        } else {
-            console.log('Le format des données ne respecte pas les consignes, veuillez entrez les informations à nouveau');
+async function ask_add_a_bus_questions() {
+    const choices = await inquirer.prompt(add_a_bus_questions);
+    if (
+        (isNaN(choices.id) === false) && 
+        ((choices.license.substring(0,1) === 'A' || choices.license.substring(0,1) === 'a') ===true ) && 
+        (isNaN(choices.license.substring(1)) === false) &&
+        (isNaN(choices.make) === true) &&
+        (isNaN(choices.seatCount) === false) && 
+        (isNaN(choices.standingCapacity) === false) && 
+        (choices.seatCount + choices.standingCapacity < 210) && // où un bus articulé peut avoir plus de 190 personnes
+        (choices.doorCount < 8) && // Ex. le rare bus MAN articulé version longue
+        ((choices.accessCount > choices.doorCount) === false)
+    ) {
+        const newBus = new Bus(choices);
+        try {
+            currentAgency.addBusToInventory(newBus);
+        } catch (error) { // A bus with this ID probably already exists.
+            console.log(error);
             ask_add_a_bus_questions();
+            return;
         }
-    });
+        writeAgencyToDatabase(currentAgency);
+        console.log("L'autobus a été ajouté.");
+        ask_top_menu_questions();
+    } else {
+        console.log('Le format des données ne respecte pas les consignes, veuillez entrez les informations à nouveau.');
+        ask_add_a_bus_questions();
+    }
 }
 
+async function ask_delete_a_bus_questions() {
+    if (currentAgency.busInventory.length == 0) {
+        console.log("Il n'y a aucun autobus à supprimer.");
+        ask_agency_questions();
+        return;
+    }
 
-
-function ask_delete_a_bus_questions() {
-    busChoices = generate_list_of_bus_choices();
-    inquirer.prompt({
+    const busChoices = generate_list_of_bus_choices();
+    const result = await inquirer.prompt({
         name: 'bus_id',
         type: 'list',
         message: 'Veuillez choisir l\'autobus à supprimer:',
         choices: busChoices
-    }).then(({ bus_id }) => {
-        const busObject = currentAgency.getBusById(bus_id);
-        currentAgency.removeBusFromInventory(busObject);
-        writeAgencyToDatabase(currentAgency);
-        console.log("Le bus a été supprimé.\n");
-        ask_agency_questions();
-    });
+    })
+    
+    const busObject = currentAgency.getBusById(result.bus_id);
+    currentAgency.removeBusFromInventory(busObject);
+    
+    writeAgencyToDatabase(currentAgency);
+    console.log("Le bus a été supprimé.\n");
+    
+    ask_agency_questions();
 }
 
-function ask_modify_a_bus_questions(bus_id) {
+async function ask_modify_a_bus_questions(bus_id) {
     const bus = currentAgency.getBusById(bus_id);
 
     const modify_a_bus_questions = [
@@ -237,14 +244,14 @@ function ask_modify_a_bus_questions(bus_id) {
         }
     ];
 
-    inquirer.prompt(modify_a_bus_questions).then(({ attribute }) => {
-        inquirer.prompt({'message': "Quelle est la nouvelle valeur?", 'name': 'new_value'}).then(({ new_value }) => {
-            bus[attribute] = new_value;
-            writeAgencyToDatabase(currentAgency);
-            console.log("La modification a été enregistrée.\n");
-            ask_top_menu_questions();
-        });
-    });
+    const result = await inquirer.prompt(modify_a_bus_questions);
+    const output = await inquirer.prompt({'message': "Quelle est la nouvelle valeur?", 'name': 'new_value'});
+    
+    bus[result.attribute] = output.new_value;
+    writeAgencyToDatabase(currentAgency);
+    console.log("La modification a été enregistrée.\n");
+    
+    ask_agency_questions();
 }
 
 // fonction ask_searchBy_bus_question() pour demander par quelle information l'usager souhaite chercher le bus en format async function partie 1/2
@@ -276,7 +283,7 @@ const ask_searchBy_bus_license = async function (){
             ask_top_menu_questions();
             } )}
 
-function ask_top_menu_questions() {
+async function ask_top_menu_questions() {
     const choices = ['Créer une nouvelle agence'];
     if (currentAgencies.length > 0) {
         // Only display this choice if there are agencies to be loaded.
@@ -290,46 +297,43 @@ function ask_top_menu_questions() {
             message: 'Que voulez-vous faire? (utilisez les flèches et la touche « retour » pour sélectionner):',
             choices: choices,
     };
+    const result = await inquirer.prompt(top_menu_questions);
 
-    inquirer.prompt(top_menu_questions).then(({ choice }) => {
-        if (choice === 'Choisir une agence existante') {
-            const agencyChoices = [];
-            for (const agency of currentAgencies) {
-                agencyChoices.push(agency.shortName);
-            }
-
-            inquirer.prompt({
-                name: 'agencyShortName',
-                type: 'list',
-                message: 'Veuillez choisir une agence (utilisez les flèches et la touche « retour » pour sélectionner):',
-                choices: agencyChoices
-            }).then(({ agencyShortName }) => {
-                currentAgency = loadAgencyFromDatabase(agencyShortName);
-                ask_agency_questions();
-            });
-        } else if (choice === 'Créer une nouvelle agence') {
-            inquirer.prompt(add_an_agency_questions).then((answers) => {
-                for (const agency of currentAgencies) {
-                    // We use .toUpperCase() to do a case-insensitive comparison.
-                    if (agency.shortName.toUpperCase() === answers.shortName.toUpperCase()) {
-                        // This agency already exists!
-                        console.log("Cette agence existe déjà.");
-                        return;
-                    }
-                }
-                // The variable 'answers' will contain a value for answers.name and answers.shortName, which is
-                // exactly what the constructor of Agency wants.
-                currentAgency = new Agency(answers);
-                writeAgencyToDatabase(currentAgency);
-
-                ask_agency_questions();
-            });
-        } else if (choice == 'Effacer une agence existante') {
-            inquirer.prompt()
-        } else if (choice === 'Quitter l\'application') {
-            process.exit()
+    if (result.choice === 'Choisir une agence existante') {
+        const agencyChoices = [];
+        for (const agency of currentAgencies) {
+            agencyChoices.push(agency.shortName);
         }
-    });
+
+        const result = await inquirer.prompt({
+            name: 'agencyShortName',
+            type: 'list',
+            message: 'Veuillez choisir une agence (utilisez les flèches et la touche « retour » pour sélectionner):',
+            choices: agencyChoices
+        });
+
+        currentAgency = loadAgencyFromDatabase(result.agencyShortName);
+        ask_agency_questions();
+    } else if (result.choice === 'Créer une nouvelle agence') {
+        const answers = await inquirer.prompt(add_an_agency_questions);
+
+        for (const agency of currentAgencies) {
+            // We use .toUpperCase() to do a case-insensitive comparison.
+            if (agency.shortName.toUpperCase() === answers.shortName.toUpperCase()) {
+                // This agency already exists!
+                console.log("Cette agence existe déjà.");
+                return;
+            }
+        }
+        // The variable 'answers' will contain a value for answers.name and answers.shortName, which is
+        // exactly what the constructor of Agency wants.
+        currentAgency = new Agency(answers);
+        writeAgencyToDatabase(currentAgency);
+
+        ask_agency_questions();
+    } else if (result.choice === 'Quitter l\'application') {
+        process.exit()
+    }
 }
 
 ask_top_menu_questions();
