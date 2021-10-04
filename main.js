@@ -23,7 +23,7 @@ const add_an_agency_questions = [
     {
         name: 'shortName',
         type: 'input',
-        message: 'Quel est l\'abbréviation du nom de l\'agence? (ex: stm)'
+        message: 'Quelle est l\'abréviation du nom de l\'agence? (ex: stm)'
     }
 ];
 
@@ -31,12 +31,12 @@ const add_a_bus_questions = [
     {
         name: 'id',
         type: 'number',
-        message: 'Quel est le numéro l\'identifiant de l\'autobus (nombre, sans espaces ni charactères spéciaux)?'
+        message: 'Quel est le numéro l\'identifiant de l\'autobus (nombre, sans espaces ni caractères spéciaux)?'
     },
     {
         name: 'license',
         type: 'input',
-        message: 'Quel est le numéro de plaque d\'immatriculation de l\'autobus (La lettre A suivi d\'un nombre, sans espaces ni charactères spéciaux)?'
+        message: 'Quel est le numéro de plaque d\'immatriculation de l\'autobus (La lettre A suivi d\'un nombre, sans espaces ni caractères spéciaux)?'
     },
     {
         name: 'make',
